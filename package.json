@@ -1,0 +1,38 @@
+{
+  "name": "@philsturgeon/spectral-owasp-ruleset",
+  "version": "0.0.0",
+  "description": "Probably don't want to beg hackers to come and take your stuff.",
+  "main": "src/ruleset.ts",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/philsturgeon/spectral-owasp-ruleset.git"
+  },
+  "keywords": [
+    "openapi",
+    "openapi3",
+    "openapi31",
+    "api-design"
+  ],
+  "author": "Phil Sturgeon <phil@apisyouwonthate.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/philsturgeon/spectral-owasp-ruleset/issues"
+  },
+  "homepage": "https://github.com/philsturgeon/spectral-owasp-ruleset#readme",
+  "dependencies": {
+    "@stoplight/spectral-formats": "^1.2.0",
+    "@stoplight/spectral-functions": "^1.6.1",
+    "@stoplight/types": "^13.6.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^28.1.6",
+    "jest": "^28.0",
+    "ts-jest": "^28.0"
+  }
+}
