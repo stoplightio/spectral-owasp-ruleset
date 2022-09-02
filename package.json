@@ -2,11 +2,12 @@
   "name": "@philsturgeon/spectral-owasp-ruleset",
   "version": "0.0.0",
   "description": "Probably don't want to beg hackers to come and take your stuff.",
-  "main": "src/ruleset.ts",
+  "main": "dist/ruleset.ts",
   "directories": {
     "test": "test"
   },
   "scripts": {
+    "build": "tsc -p tsconfig.build.json",
     "test": "jest"
   },
   "repository": {
@@ -33,6 +34,7 @@
   "devDependencies": {
     "@types/jest": "^28.1.6",
     "jest": "^28.0",
-    "ts-jest": "^28.0"
+    "ts-jest": "^28.0",
+    "typescript": "^4.8.2"
   }
 }

@@ -93,7 +93,7 @@ export default {
       description:
         "API Keys are (usually opaque) strings that\nare passed in headers, cookies or query parameters\nto access APIs.\nThose keys can be eavesdropped, especially when they are stored\nin cookies or passed as URL parameters.\n```\nsecurity:\n- ApiKey: []\npaths:\n  /books: {}\n  /users: {}\nsecuritySchemes:\n  ApiKey:\n    type: apiKey\n    in: cookie\n    name: X-Api-Key\n```",
       message: "ApiKey passed in URL: {{error}}.",
-      formats: ["oas3"],
+      formats: [oas3],
       severity: DiagnosticSeverity.Error,
       recommended: true,
       given: ['$..[securitySchemes][?(@ && @.type=="apiKey")].in'],
@@ -113,7 +113,7 @@ export default {
       description:
         "URL parameters MUST NOT contain credentials such as\napikey, password, or secret.\nSee [RAC_GEN_004](https://docs.italia.it/italia/piano-triennale-ict/lg-modellointeroperabilita-docs/it/bozza/doc/04_Raccomandazioni%20di%20implementazione/04_raccomandazioni-tecniche-generali/01_globali.html?highlight=credenziali#rac-gen-004-non-passare-credenziali-o-dati-riservati-nellurl)",
       message: "Credentials are sent via URLs. {{path}} {{error}}",
-      formats: ["oas3"],
+      formats: [oas3],
       severity: DiagnosticSeverity.Error,
       recommended: true,
       given: ["$..parameters[?(@ && @.in && @.in.match(/query|path/))].name"],
@@ -134,7 +134,7 @@ export default {
       description:
         "The HTTP authorization type in OAS supports\nall the schemes defined in the associated\n[IANA table](https://www.iana.org/assignments/http-authschemes/).\nSome of those schemes are\nnow considered insecure, such as\nnegotiating authentication using specifications\nlike NTLM or OAuth v1.",
       message: "Authentication scheme is insecure: {{error}}",
-      formats: ["oas3"],
+      formats: [oas3],
       given: ['$..[securitySchemes][?(@.type=="http")].scheme'],
       then: [
         {
@@ -182,9 +182,6 @@ export default {
         {
           "function": checkSecurity,
           "functionOptions": {
-            "schemesPath": [
-              "securitySchemes"
-            ],
             "nullable": true,
             "methods": [
               "post",
@@ -206,9 +203,6 @@ export default {
         {
           "function": checkSecurity,
           "functionOptions": {
-            "schemesPath": [
-              "securitySchemes"
-            ],
             "nullable": false,
             "methods": [
               "post",
@@ -220,7 +214,7 @@ export default {
         }
       ]
     },
-    "sec-protection-global-safe": {
+    "owasp:api2:2019-protection-global-safe": {
       description: "Check if the operation is protected at operation level.\nOtherwise, the global `#/security` property is check.\n\nYour API should be protected by a `security` rule either at\nglobal or operation level.\nAll operations should be protected especially when they\nnot safe (methods that do not alter the state of the server) \nHTTP methods like `POST`, `PUT`, `PATCH` and `DELETE`.\nThis is done with one or more non-empty `security` rules.\n\nSecurity rules are defined in the `securityScheme` section.\n\nAn example of a security rule applied at global level.\n\n```\nsecurity:\n- BasicAuth: []\npaths:\n  /books: {}\n  /users: {}\nsecuritySchemes:\n  BasicAuth:\n    scheme: http\n    type: basic\n```\n\nAn example of a security rule applied at operation level, which\neventually overrides the global one\n\n```\npaths:\n  /books:\n    post:\n      security:\n      - AccessToken: []\nsecuritySchemes:\n  BasicAuth:\n    scheme: http\n    type: basic\n  AccessToken:\n    scheme: http\n    type: bearer\n    bearerFormat: JWT\n```",
       message: "The following operation is not protected by a `security` rule: {{path}}",
       severity: "info",
@@ -229,9 +223,6 @@ export default {
         {
           function: checkSecurity,
           functionOptions: {
-            schemesPath: [
-              "securitySchemes"
-            ],
             nullable: true,
             methods: [
               "get",
@@ -263,7 +254,7 @@ export default {
     "owasp:api3:2019-define-error-responses-400": {
       description: "400 response should be defined.",
       message: "{{description}}. Missing {{property}}",
-      severity: "warning",
+      severity: DiagnosticSeverity.Warning,
       given: "$.paths..responses",
       then: [
         {
@@ -277,7 +268,7 @@ export default {
     "owasp:api3:2019-define-error-responses-429": {
       description: "429 response should be defined.",
       message: "{{description}}. Missing {{property}}",
-      severity: "warning",
+      severity: DiagnosticSeverity.Warning,
       given: "$.paths..responses",
       then: [
         {
@@ -291,7 +282,7 @@ export default {
     "owasp:api3:2019-define-error-responses-500": {
       description: "500 response should be defined.",
       message: "{{description}}. Missing {{property}}",
-      severity: "warning",
+      severity: DiagnosticSeverity.Warning,
       given: "$.paths..responses",
       then: [
         {
@@ -358,7 +349,7 @@ export default {
       description: "By default JSON Schema allows additional properties, which can potentially lead to mass assignment issues, where unspecified fields are passed to the API without validation.",
       message: "Objects should not allow unconstrained additionalProperties. Disable them with `additionalProperties: false` or add `maxProperties`.",
       formats: [
-        "oas3"
+        oas3
       ],
       severity: DiagnosticSeverity.Warning,
       given: [
@@ -382,7 +373,7 @@ export default {
       description: "By default JSON Schema allows additional properties, which can potentially lead to mass assignment issues, where unspecified fields are passed to the API without validation.",
       message: "Objects should not allow unconstrained additionalProperties. Disable them with `additionalProperties: false` or add `maxProperties`.",
       formats: [
-        "oas3"
+        oas3
       ],
       severity: DiagnosticSeverity.Warning,
       given: [

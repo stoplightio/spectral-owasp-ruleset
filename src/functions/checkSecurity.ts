@@ -6,11 +6,14 @@ export default createRulesetFunction({
     type: 'object',
     additionalProperties: false,
     properties: {
-      value: true,
+      methods: {
+        type: 'array'
+      },
+      nullable: true,
     },
-    required: ['value'],
+    required: [],
   },
-}, (input, options): IFunctionResult[] => {
+}, function checkSecurity (input, options): IFunctionResult[] {
   
   console.log("input", input);
   console.log("options", options);
