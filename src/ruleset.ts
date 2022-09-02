@@ -54,11 +54,11 @@ export default {
      *
      * Use case
      * - 🟠 Unprotected APIs that are considered “internal”
-     * - 🟠 Weak authentication that does not follow industry best practices
+     * - ✅ Weak authentication that does not follow industry best practices
      * - 🟠 Weak API keys that are not rotated
      * - ❌ Passwords that are weak, plain text, encrypted, poorly hashed, shared, or default passwords
      * - 🤷 Authentication susceptible to brute force attacks and credential stuffing
-     * - 🟠 Credentials and keys included in URLs
+     * - ✅ Credentials and keys included in URLs
      * - 🟠 Lack of access token validation (including JWT validation)
      * 👆 https://github.com/italia/api-oas-checker/blob/master/security/securitySchemes.yml#L3
      * - 🟠 Unsigned or weakly signed non-expiring JWTs
