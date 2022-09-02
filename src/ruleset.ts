@@ -1,4 +1,4 @@
-import { truthy, pattern, schema } from "@stoplight/spectral-functions";
+import { defined, truthy, pattern, schema, falsy } from "@stoplight/spectral-functions";
 import { oas2, oas3 } from "@stoplight/spectral-formats";
 import { DiagnosticSeverity } from "@stoplight/types";
 import checkSecurity from "./functions/checkSecurity";
@@ -358,11 +358,11 @@ export default {
       then: [
         {
           field: "additionalProperties",
-          function: "falsy"
+          function: falsy
         },
         {
           field: "additionalProperties",
-          function: "defined"
+          function: defined
         }
       ]
     },
@@ -382,7 +382,7 @@ export default {
       then: [
         {
           field: "maxProperties",
-          function: "defined"
+          function: defined
         }
       ]
     },
