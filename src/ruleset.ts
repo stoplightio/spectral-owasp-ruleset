@@ -21,10 +21,13 @@ export default {
      * - ✅ Use random IDs that cannot be guessed (UUIDs).
      */
 
-    // Author: Phil Sturgeon (https://github.com/philsturgeon)
+    /**
+     * @author: Phil Sturgeon <https://github.com/philsturgeon>
+     */
     "owasp:api1:2019-no-numeric-ids": {
       description:
         "OWASP API1:2019 - Use random IDs that cannot be guessed (UUIDs)",
+      severity: DiagnosticSeverity.Error,
       given:
         '$.paths..parameters[*].[?(@property === "name" && (@ === "id" || @.match(/(_id|Id)$/)))]^.schema',
       then: {
@@ -47,16 +50,15 @@ export default {
           },
         },
       },
-      severity: DiagnosticSeverity.Error,
     },
 
     /**
      * API2:2019 — Broken authentication
      *
      * Use case
-     * - 🟠 Unprotected APIs that are considered “internal”
+     * - ✅ Unprotected APIs that are considered “internal”
      * - ✅ Weak authentication that does not follow industry best practices
-     * - 🟠 Weak API keys that are not rotated
+     * - ✅ Weak API keys that are not rotated
      * - ❌ Passwords that are weak, plain text, encrypted, poorly hashed, shared, or default passwords
      * - 🤷 Authentication susceptible to brute force attacks and credential stuffing
      * - ✅ Credentials and keys included in URLs
@@ -71,11 +73,13 @@ export default {
      * - ❌ Use stricter rate-limiting for authentication, and implement lockout policies and weak password checks.
      */
 
-    // Author: Phil Sturgeon (https://github.com/philsturgeon)
+    /**
+     * @author: Phil Sturgeon <https://github.com/philsturgeon>
+     */
     "owasp:api2:2019-no-http-basic": {
       description: "Basic authentication credentials transported over network",
-      message:
-        "{{property}} uses basic auth. Use a more secure authentication method, like OAuth 2.0.",
+      message: "{{property}} uses basic auth. Use a more secure authentication method, like OAuth 2.0.",
+      severity: DiagnosticSeverity.Error,
       given: "$.components.securitySchemes[*]",
       then: {
         field: "scheme",
@@ -84,17 +88,18 @@ export default {
           notMatch: "basic",
         },
       },
-      severity: DiagnosticSeverity.Error,
     },
 
-    // Author: Roberto Polli (github.com/ioggstream)
-    // https://github.com/italia/api-oas-checker/blob/master/rules/secrets-parameters.yml
+    /**
+     * @author: Roberto Polli <https://github.com/ioggstream>
+     * @see: https://github.com/italia/api-oas-checker/blob/master/rules/secrets-parameters.yml
+     */
     "api2:2019-no-api-keys-in-url": {
       description:
         "API Keys are (usually opaque) strings that\nare passed in headers, cookies or query parameters\nto access APIs.\nThose keys can be eavesdropped, especially when they are stored\nin cookies or passed as URL parameters.\n```\nsecurity:\n- ApiKey: []\npaths:\n  /books: {}\n  /users: {}\nsecuritySchemes:\n  ApiKey:\n    type: apiKey\n    in: cookie\n    name: X-Api-Key\n```",
       message: "ApiKey passed in URL: {{error}}.",
-      formats: [oas3],
       severity: DiagnosticSeverity.Error,
+      formats: [oas3],
       recommended: true,
       given: ['$..[securitySchemes][?(@ && @.type=="apiKey")].in'],
       then: [
@@ -107,14 +112,16 @@ export default {
       ],
     },
 
-    // Author: Roberto Polli (github.com/ioggstream)
-    // https://github.com/italia/api-oas-checker/blob/master/rules/secrets-parameters.yml
+    /**
+     * @author: Roberto Polli <https://github.com/ioggstream>
+     * @see: https://github.com/italia/api-oas-checker/blob/master/rules/secrets-parameters.yml
+     */
     "owasp:api2:2019-no-credentials-in-url": {
       description:
         "URL parameters MUST NOT contain credentials such as\napikey, password, or secret.\nSee [RAC_GEN_004](https://docs.italia.it/italia/piano-triennale-ict/lg-modellointeroperabilita-docs/it/bozza/doc/04_Raccomandazioni%20di%20implementazione/04_raccomandazioni-tecniche-generali/01_globali.html?highlight=credenziali#rac-gen-004-non-passare-credenziali-o-dati-riservati-nellurl)",
       message: "Credentials are sent via URLs. {{path}} {{error}}",
-      formats: [oas3],
       severity: DiagnosticSeverity.Error,
+      formats: [oas3],
       recommended: true,
       given: ["$..parameters[?(@ && @.in && @.in.match(/query|path/))].name"],
       then: [
@@ -128,12 +135,15 @@ export default {
       ],
     },
 
-    // Author: Roberto Polli (github.com/ioggstream)
-    // https://github.com/italia/api-oas-checker/blob/master/security/securitySchemes_insecure.yml#L38
+    /**
+     * @author: Roberto Polli <https://github.com/ioggstream>
+     * @see: https://github.com/italia/api-oas-checker/blob/master/security/securitySchemes_insecure.yml#L38
+     */
     "owasp:api2:2019-auth-insecure-schemes": {
       description:
         "The HTTP authorization type in OAS supports\nall the schemes defined in the associated\n[IANA table](https://www.iana.org/assignments/http-authschemes/).\nSome of those schemes are\nnow considered insecure, such as\nnegotiating authentication using specifications\nlike NTLM or OAuth v1.",
       message: "Authentication scheme is insecure: {{error}}",
+      severity: DiagnosticSeverity.Error,
       formats: [oas3],
       given: ['$..[securitySchemes][?(@.type=="http")].scheme'],
       then: [
@@ -144,14 +154,16 @@ export default {
           },
         },
       ],
-      severity: DiagnosticSeverity.Error,
     },
 
-    // Author: Roberto Polli (github.com/ioggstream)
-    // https://github.com/italia/api-oas-checker/blob/master/security/securitySchemes.yml
+    /**
+     * @author: Roberto Polli <https://github.com/ioggstream>
+     * @see: https://github.com/italia/api-oas-checker/blob/master/security/securitySchemes.yml
+     */
     "owasp:api2:2019-jwt-best-practices": {
       description: "JSON Web Tokens RFC7519 is a compact, URL-safe means of representing\nclaims to be transferred between two parties. JWT can be enclosed in\nencrypted or signed tokens like JWS and JWE.\nThe [JOSE IANA registry](https://www.iana.org/assignments/jose/jose.xhtml)\nprovides algorithms information.\nRFC8725 describes common pitfalls in the JWx specifications and in\ntheir implementations, such as:\n- the ability to ignore algorithms, eg. `{\"alg\": \"none\"}`;\n- using insecure algorithms like `RSASSA-PKCS1-v1_5` eg. `{\"alg\": \"RS256\"}`.\nAn API using JWT should explicit in the `description`\nthat the implementation conforms to RFC8725.\n```\ncomponents:\n  securitySchemes:\n    JWTBearer:\n      type: http\n      scheme: bearer\n      bearerFormat: JWT\n      description: |-\n        A bearer token in the format of a JWS and conformato\n        to the specifications included in RFC8725.\n```",
       message: "JWT usage should be detailed in `description` {{error}}.",
+      severity: DiagnosticSeverity.Warning,
       given: [
         "$..[securitySchemes][?(@.type==\"oauth2\")]",
         "$..[securitySchemes][?(@.bearerFormat==\"jwt\" || @.bearerFormat==\"JWT\")]"
@@ -168,20 +180,25 @@ export default {
             match: ".*RFC8725.*"
           }
         }
-      ]
+      ],
     },
 
-    // Author: Roberto Polli (github.com/ioggstream)
-    // https://github.com/italia/api-oas-checker/blob/master/security/security.yml
+    /**
+     * @author: Roberto Polli <https://github.com/ioggstream>
+     * @see https://github.com/italia/api-oas-checker/blob/master/security/security.yml
+     */
     "owasp:api2:2019-protection-global-unsafe": {
       description: "Your API should be protected by a `security` rule either at\nglobal or operation level.\nAll operations should be protected especially when they\nnot safe (methods that do not alter the state of the server) \nHTTP methods like `POST`, `PUT`, `PATCH` and `DELETE`.\nThis is done with one or more non-empty `security` rules.\n\nSecurity rules are defined in the `securityScheme` section.\n\nAn example of a security rule applied at global level.\n\n```\nsecurity:\n- BasicAuth: []\npaths:\n  /books: {}\n  /users: {}\nsecuritySchemes:\n  BasicAuth:\n    scheme: http\n    type: basic\n```\n\nAn example of a security rule applied at operation level, which\neventually overrides the global one\n\n```\npaths:\n  /books:\n    post:\n      security:\n      - AccessToken: []\nsecuritySchemes:\n  BasicAuth:\n    scheme: http\n    type: basic\n  AccessToken:\n    scheme: http\n    type: bearer\n    bearerFormat: JWT\n```",
-      message: "The following unsafe operation is not protected by a `security` rule: {{path}}",
-      severity: "error",
+      message: "This operation is not protected by any security scheme.",
+      severity: DiagnosticSeverity.Error,
       given: "$",
       then: [
         {
           "function": checkSecurity,
           "functionOptions": {
+            schemesPath: [
+              'securitySchemes'
+            ],
             "nullable": true,
             "methods": [
               "post",
@@ -191,18 +208,21 @@ export default {
             ]
           }
         }
-      ]
+      ],
     },
     
     "owasp:api2:2019-protection-global-unsafe-strict": {
-      description: "Check if the operation is protected at operation level.\nOtherwise, the global `#/security` property is check.\n\nYour API should be protected by a `security` rule either at\nglobal or operation level.\nAll operations should be protected especially when they\nnot safe (methods that do not alter the state of the server) \nHTTP methods like `POST`, `PUT`, `PATCH` and `DELETE`.\nThis is done with one or more non-empty `security` rules.\n\nSecurity rules are defined in the `securityScheme` section.\n\nAn example of a security rule applied at global level.\n\n```\nsecurity:\n- BasicAuth: []\npaths:\n  /books: {}\n  /users: {}\nsecuritySchemes:\n  BasicAuth:\n    scheme: http\n    type: basic\n```\n\nAn example of a security rule applied at operation level, which\neventually overrides the global one\n\n```\npaths:\n  /books:\n    post:\n      security:\n      - AccessToken: []\nsecuritySchemes:\n  BasicAuth:\n    scheme: http\n    type: basic\n  AccessToken:\n    scheme: http\n    type: bearer\n    bearerFormat: JWT\n```",
-      message: "The following unsafe operation is not protected by a `security` rule: {{path}}",
-      severity: "info",
+      description: "Check if the operation is protected at operation level.\nOtherwise, the global `#/security` property is check.",
+      message: "This operation is not protected by any security scheme.",
+      severity: DiagnosticSeverity.Information,
       given: "$",
       then: [
         {
           "function": checkSecurity,
           "functionOptions": {
+            schemesPath: [
+              'securitySchemes'
+            ],
             "nullable": false,
             "methods": [
               "post",
@@ -212,17 +232,20 @@ export default {
             ]
           }
         }
-      ]
+      ],
     },
     "owasp:api2:2019-protection-global-safe": {
-      description: "Check if the operation is protected at operation level.\nOtherwise, the global `#/security` property is check.\n\nYour API should be protected by a `security` rule either at\nglobal or operation level.\nAll operations should be protected especially when they\nnot safe (methods that do not alter the state of the server) \nHTTP methods like `POST`, `PUT`, `PATCH` and `DELETE`.\nThis is done with one or more non-empty `security` rules.\n\nSecurity rules are defined in the `securityScheme` section.\n\nAn example of a security rule applied at global level.\n\n```\nsecurity:\n- BasicAuth: []\npaths:\n  /books: {}\n  /users: {}\nsecuritySchemes:\n  BasicAuth:\n    scheme: http\n    type: basic\n```\n\nAn example of a security rule applied at operation level, which\neventually overrides the global one\n\n```\npaths:\n  /books:\n    post:\n      security:\n      - AccessToken: []\nsecuritySchemes:\n  BasicAuth:\n    scheme: http\n    type: basic\n  AccessToken:\n    scheme: http\n    type: bearer\n    bearerFormat: JWT\n```",
-      message: "The following operation is not protected by a `security` rule: {{path}}",
-      severity: "info",
+      description: "Check if the operation is protected at operation level.\nOtherwise, the global `#/security` property is check.",
+      message: "This operation is not protected by any security scheme.",
+      severity: DiagnosticSeverity.Information,
       given: "$",
       then: [
         {
           function: checkSecurity,
           functionOptions: {
+            schemesPath: [
+              'securitySchemes'
+            ],
             nullable: true,
             methods: [
               "get",
@@ -250,7 +273,9 @@ export default {
      * - ❌ Enforce response checks to prevent accidental leaks of data or exceptions.
      */
 
-    // Author: Jason Harmon (github.com/jharmn)
+    /**
+     * @author: Jason Harmon <https://github.com/jharmn>
+     */
     "owasp:api3:2019-define-error-responses-400": {
       description: "400 response should be defined.",
       message: "{{description}}. Missing {{property}}",
@@ -264,7 +289,9 @@ export default {
       ],
     },
  
-    // Author: Jason Harmon (github.com/jharmn)
+    /**
+     * @author: Jason Harmon <https://github.com/jharmn>
+     */
     "owasp:api3:2019-define-error-responses-429": {
       description: "429 response should be defined.",
       message: "{{description}}. Missing {{property}}",
@@ -278,7 +305,9 @@ export default {
       ],
     },
     
-    // Author: Jason Harmon (github.com/jharmn)
+    /**
+     * @author: Jason Harmon <https://github.com/jharmn>
+     */
     "owasp:api3:2019-define-error-responses-500": {
       description: "500 response should be defined.",
       message: "{{description}}. Missing {{property}}",
@@ -343,8 +372,10 @@ export default {
      */
 
     
-    // Author: Roberto Polli (github.com/ioggstream)
-    // https://github.com/italia/api-oas-checker/blob/master/security/objects.yml
+    /**
+     * @author: Roberto Polli <https://github.com/ioggstream>
+     * @see: https://github.com/italia/api-oas-checker/blob/master/security/objects.yml
+     */
     "owasp:api6:2019-no-additionalProperties": {
       description: "By default JSON Schema allows additional properties, which can potentially lead to mass assignment issues, where unspecified fields are passed to the API without validation.",
       message: "Objects should not allow unconstrained additionalProperties. Disable them with `additionalProperties: false` or add `maxProperties`.",
@@ -367,8 +398,10 @@ export default {
       ]
     },
 
-    // Author: Roberto Polli (github.com/ioggstream)
-    // https://github.com/italia/api-oas-checker/blob/master/security/objects.yml
+    /**
+     * @author: Roberto Polli <https://github.com/ioggstream>
+     * @see: https://github.com/italia/api-oas-checker/blob/master/security/objects.yml
+     */
     "owasp:api6:2019-constrained-additionalProperties": {
       description: "By default JSON Schema allows additional properties, which can potentially lead to mass assignment issues, where unspecified fields are passed to the API without validation.",
       message: "Objects should not allow unconstrained additionalProperties. Disable them with `additionalProperties: false` or add `maxProperties`.",
@@ -396,7 +429,7 @@ export default {
      * - ❌ Unpatched systems
      * - ❌ Unprotected files and directories
      * - ❌ Unhardened images
-     * - 🟠 Missing, outdated, or misconfigured TLS
+     * - ✅ Missing, outdated, or misconfigured TLS
      * - ❌ Exposed storage or server management panels
      * - 🟠 Missing CORS policy or security headers
      * - 🟠 Error messages with stack traces
@@ -407,10 +440,12 @@ export default {
      * - ❌ Automate locating configuration flaws.
      * - ❌ Disable unnecessary features.
      * - ❌ Restrict administrative access.
-     * - 🟠 Define and enforce all outputs, including errors.
+     * - ✅ Define and enforce all outputs, including errors.
      */
 
-    // Author: Andrzej (https://github.com/jerzyn)
+    /**
+     * @author: Andrzej <https://github.com/jerzyn>
+     */
     "owasp:api7:2019-security-hosts-https-oas2": {
       description: "ALL requests MUST go through `https` protocol only",
       message:
@@ -432,7 +467,9 @@ export default {
       formats: [oas2],
     },
 
-    // Author: Andrzej (https://github.com/jerzyn)
+    /**
+     * @author: Andrzej <https://github.com/jerzyn>
+     */
     "owasp:api7:2019-security-hosts-https-oas3": {
       description: "ALL requests MUST go through https:// protocol only",
       message:
