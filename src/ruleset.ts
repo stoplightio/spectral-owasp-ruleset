@@ -447,7 +447,7 @@ export default {
      * @author: Andrzej <https://github.com/jerzyn>
      */
     "owasp:api7:2019-security-hosts-https-oas2": {
-      description: "ALL requests MUST go through `https` protocol only",
+      description: "ALL requests MUST go through https:// protocol only",
       message:
         "{{property}} uses http. Schemes MUST be https and no other value is allowed.",
       given: "$.schemes",

@@ -1,6 +1,6 @@
-# APIs You Won't Hate: API Style Guide
+# Spectral OWASP API Security
 
-Make your APIs "better" according to APIs You Won't Hate, with this slick command line tool that'll run on your [OpenAPI](https://spec.openapis.org/oas/v3.1.0). 
+Scan an [OpenAPI](https://spec.openapis.org/oas/v3.1.0) document to detect security issues. As OpenAPI is only describing the surface level of the API it cannot see what is happening in your code, but it can spot obvious issues and outdated standards being used.
 
 ## Installation
 
@@ -12,7 +12,7 @@ npm install --save -D @stoplight/spectral-cli
 ## Usage
 
 
-Create a local ruleset that extends the style guide. In its most basic form this just tells Spectral what ruleset you want to use, but it will allow you to customise things, add your own rules, turn bits off if its causing trouble.
+Create a local ruleset that extends the ruleset. In its most basic form this just tells Spectral what ruleset you want to use, but it will allow you to customise things, add your own rules, turn bits off if its causing trouble.
 
 ```
 cd ~/src/<your-api>
@@ -32,26 +32,25 @@ Next, use Spectral CLI to lint against your OpenAPI description. Don't have any 
 spectral lint api/openapi.yaml
 ```
 
-You should see some output like this, letting you know there are a few more standards you could be using (shoutout to [Standards.REST](https://standards.rest/)):
+You should see some output like this:
 
 ```
 /Users/phil/src/protect-earth-api/api/openapi.yaml
-  18:7   warning  api-health               Creating a `/health` endpoint is a simple solution for pull-based monitoring and manually checking the status of an API.  paths
-  18:7   warning  api-home                 Stop forcing all API consumers to visit documentation for basic interactions when the API could do that itself.           paths
-  36:30  warning  no-unknown-error-format  Every error response SHOULD support either RFC 7807 (https://tools.ietf.org/html/rfc6648) or the JSON:API Error format.   paths./v1/orders.post.responses[401].content.application/json
-  96:30  warning  no-unknown-error-format  Every error response SHOULD support either RFC 7807 (https://tools.ietf.org/html/rfc6648) or the JSON:API Error format.   paths./v1/orders/{order}.get.responses[401].content.application/json
- 112:30  warning  no-unknown-error-format  Every error response SHOULD support either RFC 7807 (https://tools.ietf.org/html/rfc6648) or the JSON:API Error format.   paths./v1/orders/{order}.get.responses[404].content.application/json
+  44:17      warning  owasp:api3:2019-define-error-responses-400:400 response should be defined.. Missing responses[400]  paths./upload.post.responses
+  44:17      warning  owasp:api3:2019-define-error-responses-429:429 response should be defined.. Missing responses[429]  paths./upload.post.responses
+  44:17      warning  owasp:api3:2019-define-error-responses-500:500 response should be defined.. Missing responses[500]  paths./upload.post.responses
+ 193:16  information  owasp:api2:2019-protection-global-safe      This operation is not protected by any security scheme.  paths./sites.get.security
+ 210:16  information  owasp:api2:2019-protection-global-safe      This operation is not protected by any security scheme.  paths./species.get.security
 ```
 
-Now you have some things to work on for your API. Thankfully these are only warnings, which are not going to [fail continuous integration](https://meta.stoplight.io/docs/spectral/ZG9jOjExNTMyOTAx-continuous-integration) (unless [you want them to](https://meta.stoplight.io/docs/spectral/ZG9jOjI1MTg1-spectral-cli#error-results)).
+Now you have some things to work on for your API. Thankfully these are only at the `warning` and `information` severity, and that is not going to [fail continuous integration](https://meta.stoplight.io/docs/spectral/ZG9jOjExNTMyOTAx-continuous-integration) (unless [you want them to](https://meta.stoplight.io/docs/spectral/ZG9jOjI1MTg1-spectral-cli#error-results)).
 
-
-There are [a bunch of other rulesets](https://github.com/stoplightio/spectral-rulesets) you can check out if you feel like making your own API Style Guides, or feel like contributing some new rules here via a pull request.
+There are [a bunch of other rulesets](https://github.com/stoplightio/spectral-rulesets) you can use, or use for inspiration for your own rulesets and API Style Guides.
 
 ## 🎉 Thanks
 
 - [Andrzej](https://github.com/jerzyn) - Great rules contributed to the Adidas style guide.
-- [Nauman Ali](https://github.com/naumanali-stoplight) - Creating the `no-global-versioning` rule as part of his excellent [style guide blog post series](https://blog.stoplight.io/consistent-api-urls-with-openapi-and-style-guides).
+- [Roberto Polli](https://github.com/ioggstream) - Created lots of excellent Spectral rules for [API OAS Checker](https://github.com/italia/api-oas-checker/) which aligned with the OWASP API rules.
 
 ## 📜 License
 
