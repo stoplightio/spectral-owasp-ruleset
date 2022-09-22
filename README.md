@@ -5,7 +5,7 @@ Scan an [OpenAPI](https://spec.openapis.org/oas/v3.1.0) document to detect secur
 ## Installation
 
 ``` bash
-npm install --save -D @philsturgeon/spectral-owasp-ruleset
+npm install --save -D @stoplight/spectral-owasp-ruleset
 npm install --save -D @stoplight/spectral-cli
 ```
 
@@ -23,7 +23,7 @@ echo 'extends: ["@philsturgeon/spectral-owasp-ruleset"]' > .spectral.yaml
 _If you're using VS Code or Stoplight Studio then the NPM modules will not be available. Instead you can use the CDN hosted version:_
 
 ```
-echo 'extends: ["https://unpkg.com/@philsturgeon/spectral-owasp-ruleset@1.0/dist/ruleset.js"]' > .spectral.yaml
+echo 'extends: ["https://unpkg.com/@stoplight/spectral-owasp-ruleset"]' > .spectral.yaml
 ```
 
 Next, use Spectral CLI to lint against your OpenAPI description. Don't have any OpenAPI? [Record some HTTP traffic to make OpenAPI](https://apisyouwonthate.com/blog/creating-openapi-from-http-traffic) and then you can switch to API Design-First going forwards.
@@ -56,6 +56,8 @@ There are [a bunch of other rulesets](https://github.com/stoplightio/spectral-ru
 
 This repository is licensed under the MIT license.
 
-## 🌲 Sponsor
+## 🌲 Sponsor 
 
-If you'd like to say thanks for this style guide, throw some money at [Protect Earth](https://protect.earth/donate), a charity that plants trees all over the United Kingdom, which has [secured a 64 acre ancient woodland to restore](https://www.protect.earth/blog/high-wood). Phil spends all his time on this, both planting trees _and_ writing APIs believe it or not!
+If you would like to thank us for creating Spectral, we ask that you [**buy the world a tree**][stoplight_forest].
+
+[stoplight_forest]: https://ecologi.com/stoplightinc

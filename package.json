@@ -1,5 +1,5 @@
 {
-  "name": "@philsturgeon/spectral-owasp-ruleset",
+  "name": "@stoplight/spectral-owasp-ruleset",
   "version": "0.0.0",
   "description": "Probably don't want to beg hackers to come and take your stuff.",
   "main": "dist/ruleset.js",
