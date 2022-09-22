@@ -55,6 +55,7 @@
     "format": ["cjs", "esm"],
     "sourcemap": true,
     "noExternal": ["@stoplight/types"],
+    "external": ["@stoplight/spectral-core"],
     "footer": {
       "js": "module.exports = module.exports.default;"
     }
