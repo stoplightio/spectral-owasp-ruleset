@@ -129,7 +129,7 @@ export default {
           field: "name",
           function: pattern,
           functionOptions: {
-            notMatch: "/^.*(password|secret|apikey).*$/i",
+            notMatch: "/^.*(client_secret|token|access_token|refresh_token|id_token|password|secret|apikey).*$/i",
           },
         },
       ],
