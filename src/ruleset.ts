@@ -29,7 +29,7 @@ export default {
         "OWASP API1:2019 - Use random IDs that cannot be guessed (UUIDs)",
       severity: DiagnosticSeverity.Error,
       given:
-        '$.paths..parameters[*].[?(@property === "name" && (@ === "id" || @.match(/(_id|Id)$/)))]^.schema',
+        '$.paths..parameters[*].[?(@property === "name" && (@ === "id" || @.match(/(_id|Id|-id)$/)))]^.schema',
       then: {
         function: schema,
         functionOptions: {
@@ -212,7 +212,7 @@ export default {
     },
     
     "owasp:api2:2019-protection-global-unsafe-strict": {
-      description: "Check if the operation is protected at operation level.\nOtherwise, the global `#/security` property is check.",
+      description: "Check if the operation is protected at operation level.\nOtherwise, check the global `#/security` property.",
       message: "This operation is not protected by any security scheme.",
       severity: DiagnosticSeverity.Information,
       given: "$",
@@ -235,7 +235,7 @@ export default {
       ],
     },
     "owasp:api2:2019-protection-global-safe": {
-      description: "Check if the operation is protected at operation level.\nOtherwise, the global `#/security` property is check.",
+      description: "Check if the operation is protected at operation level.\nOtherwise, check the global `#/security` property.",
       message: "This operation is not protected by any security scheme.",
       severity: DiagnosticSeverity.Information,
       given: "$",
@@ -331,7 +331,7 @@ export default {
      * - 🟠 “Zip bombs”, archive files that have been designed so that unpacking them takes excessive amount of resources and overloads the API.
      *
      * How to prevent
-     * - 🟠 Define proper rate limiting.
+     * - 🟠 Define proper rate limiting. https://github.com/stoplightio/spectral-owasp-ruleset/issues/4
      * - ❌ Limit payload sizes.
      * - ❌ Tailor the rate limiting to be match what API methods, clients, or addresses need or should be allowed to get.
      * - ❌ Add checks on compression ratios.
@@ -491,13 +491,7 @@ export default {
      * Attackers construct API calls that include SQL, NoSQL, LDAP, OS, or other commands that the API or the backend behind it blindly executes.
      *
      * Use cases
-     * - 🟠 Attackers send malicious input to be forwarded to an internal interpreter:
-     *   SQL
-     *   NoSQL
-     *   LDAP
-     *   OS commands
-     *   XML parsers
-     *   Object-Relational Mapping (ORM)
+     * - ❌ Attackers send malicious input to be forwarded to an internal interpreter:
      *
      * How to prevent
      * - 🟠 Never trust your API consumers, even if they are internal.
@@ -527,27 +521,8 @@ export default {
      * - ❌ Implement additional external controls, such as API firewalls.
      * - 🟠 Properly retire old versions of APIs or backport security fixes to them.
      * - 🟠 Implement strict authentication, redirects, CORS, and so forth.
+     *   - https://github.com/stoplightio/spectral-owasp-ruleset/issues/5
      */
 
-    // 'owasp:api9:2019-improper-assets-management':
-    // 'https://apisecurity.io/encyclopedia/content/owasp/api9-improper-assets-management',
-
-    /**
-     * API10:2019 — Insufficient logging and monitoring
-     *
-     * Use case
-     * - ❌ Logs are not protected for integrity.
-     * - ❌ Logs are not integrated into Security Information and Event Management (SIEM) systems.
-     * - ❌ Logs and alerts are poorly designed.
-     * - ❌ Companies rely on manual rather than automated systems.
-     *
-     * How to prevent
-     * - ❌ Log failed attempts, denied access, input validation failures, or any failures in security policy checks.
-     * - ❌ Ensure that logs are formatted so that other tools can consume them as well.
-     * - ❌ Protect logs like highly sensitive information.
-     * - ❌ Include enough detail to identify attackers.
-     * - ❌ Avoid having sensitive data in logs — if you need the information for debugging purposes, redact it partially.
-     * - ❌ Integrate with SIEMs and other dashboards, monitoring, and alerting tools.
-     */
   },
 };
