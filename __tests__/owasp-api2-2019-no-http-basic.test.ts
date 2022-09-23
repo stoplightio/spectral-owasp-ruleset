@@ -1,7 +1,7 @@
 import { DiagnosticSeverity } from "@stoplight/types";
 import testRule from "./__helpers__/helper";
 
-testRule("no-http-basic", [
+testRule("owasp:api2:2019-no-http-basic", [
 	{
 		name: "valid case",
 		document: {
