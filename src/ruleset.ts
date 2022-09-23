@@ -331,7 +331,7 @@ export default {
      * - 🟠 “Zip bombs”, archive files that have been designed so that unpacking them takes excessive amount of resources and overloads the API.
      *
      * How to prevent
-     * - 🟠 Define proper rate limiting. https://github.com/stoplightio/spectral-owasp-ruleset/issues/4
+     * - ✅ Define proper rate limiting.
      * - ❌ Limit payload sizes.
      * - ❌ Tailor the rate limiting to be match what API methods, clients, or addresses need or should be allowed to get.
      * - ❌ Add checks on compression ratios.
@@ -340,6 +340,25 @@ export default {
      * - 🟠 PS: Limit array sizes
      * 👆 https://github.com/italia/api-oas-checker/blob/master/security/array.yml
      */
+
+    
+    /**
+     * @author: Phil Sturgeon <https://github.com/philsturgeon>
+     */
+    "owasp:api3:2019-rate-limit-retry-after": {
+      description:
+        "A 429 response should define a Retry-After header",
+      message:
+        "Define proper rate limiting to avoid attackers overloading the API. Part of that involves setting a Retry-After header so well meaning consumers are not polling and potentially exacerbating problems.",
+      formats: [oas3],
+      given: "$..responses[429].headers",
+      then: {
+        field: 'Retry-After',
+        function: defined,
+      },
+      severity: DiagnosticSeverity.Warning,
+    },
+
 
     /**
      * API5:2019 — Broken function level authorization
@@ -370,7 +389,6 @@ export default {
      * - 🟠 Use the readOnly property set to true in object schemas for all properties that can be retrieved through APIs but should never be modified.
      * - 🟠 Precisely define the schemas, types, and patterns you will accept in requests at design time and enforce them at runtime.
      */
-
     
     /**
      * @author: Roberto Polli <https://github.com/ioggstream>
