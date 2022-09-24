@@ -36,7 +36,7 @@ testRule("owasp:api2:2019-no-http-basic", [
 		errors: [
 			{
 				message:
-					"HTTP Basic is a pretty insecure way to pass credentials around, please consider an alternative.",
+					"Security scheme uses HTTP Basic. Use a more secure authentication method, like OAuth 2.0.",
 				path: [
 					"components",
 					"securitySchemes",

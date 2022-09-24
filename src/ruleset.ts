@@ -77,8 +77,8 @@ export default {
      * @author: Phil Sturgeon <https://github.com/philsturgeon>
      */
     "owasp:api2:2019-no-http-basic": {
-      description: "Basic authentication credentials transported over network",
-      message: "{{property}} uses basic auth. Use a more secure authentication method, like OAuth 2.0.",
+      description: "Basic authentication credentials transported over network are more susceptible to interception than other forms of authentication, and as they are not encrypted it means passwords and tokens are more easily leaked.",
+      message: "Security scheme uses HTTP Basic. Use a more secure authentication method, like OAuth 2.0.",
       severity: DiagnosticSeverity.Error,
       given: "$.components.securitySchemes[*]",
       then: {
@@ -341,14 +341,43 @@ export default {
      * 👆 https://github.com/italia/api-oas-checker/blob/master/security/array.yml
      */
 
+    /**
+     * @author: Phil Sturgeon <https://github.com/philsturgeon>
+     */
+     "owasp:api3:2019-rate-limit": {
+      message: "All 2XX and 4XX responses should define rate limiting headers.",
+      description: "Define proper rate limiting to avoid attackers overloading the API. There are many ways to implement rate-limiting, but most of them involve using HTTP headers, and there are two popular ways to do that:\n\nIETF Draft HTTP RateLimit Headers:. https://datatracker.ietf.org/doc/draft-ietf-httpapi-ratelimit-headers/\n\nCustomer headers like X-Rate-Limit-Limit (Twitter: https://developer.twitter.com/en/docs/twitter-api/rate-limits) or X-RateLimit-Limit (GitHub: https://docs.github.com/en/rest/overview/resources-in-the-rest-api)",
+      formats: [oas3],
+      given: "$.paths.[*]..responses[?(@property.match(/^(2|4)/))]",
+      then: {
+        field: 'headers',
+        function: schema,
+        functionOptions: {
+          schema: {
+            type: 'object',
+            oneOf: [
+              {
+                required: ['RateLimit-Limit', 'RateLimit-Reset'],
+              },
+              {
+                required: ['X-RateLimit-Limit'],
+              },
+              {
+                required: ['X-Rate-Limit-Limit'],
+              },
+            ],
+          }
+        }
+      },
+      severity: DiagnosticSeverity.Error,
+    },
     
     /**
      * @author: Phil Sturgeon <https://github.com/philsturgeon>
      */
-    "owasp:api3:2019-rate-limit-retry-after": {
+     "owasp:api3:2019-rate-limit-retry-after": {
+      message: "A 429 response should define a Retry-After header.",
       description:
-        "A 429 response should define a Retry-After header",
-      message:
         "Define proper rate limiting to avoid attackers overloading the API. Part of that involves setting a Retry-After header so well meaning consumers are not polling and potentially exacerbating problems.",
       formats: [oas3],
       given: "$..responses[429].headers",
@@ -356,9 +385,8 @@ export default {
         field: 'Retry-After',
         function: defined,
       },
-      severity: DiagnosticSeverity.Warning,
+      severity: DiagnosticSeverity.Error,
     },
-
 
     /**
      * API5:2019 — Broken function level authorization
@@ -465,9 +493,8 @@ export default {
      * @author: Andrzej <https://github.com/jerzyn>
      */
     "owasp:api7:2019-security-hosts-https-oas2": {
-      description: "ALL requests MUST go through https:// protocol only",
-      message:
-        "{{property}} uses http. Schemes MUST be https and no other value is allowed.",
+      message: "All servers defined MUST use https, and no other protocol is permitted.",
+      description: "All server interactions MUST use the https protocol, so the only OpenAPI scheme being used should be `https`.\n\nLearn more about the importance of TLS (over SSL) here: https://cheatsheetseries.owasp.org/cheatsheets/Transport_Layer_Protection_Cheat_Sheet.html",
       given: "$.schemes",
       then: {
         function: schema,
@@ -489,9 +516,8 @@ export default {
      * @author: Andrzej <https://github.com/jerzyn>
      */
     "owasp:api7:2019-security-hosts-https-oas3": {
-      description: "ALL requests MUST go through https:// protocol only",
-      message:
-        "{{property}} uses http. Schemes MUST be https and no other value is allowed.",
+      message: "Server URLs MUST begin https://, and no other protocol is permitted.",
+      description: "All server interactions MUST use the https protocol, meaning server URLs should begin `https://`.\n\nLearn more about the importance of TLS (over SSL) here: https://cheatsheetseries.owasp.org/cheatsheets/Transport_Layer_Protection_Cheat_Sheet.html",
       given: "$.servers..url",
       then: {
         function: pattern,
