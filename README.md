@@ -17,7 +17,7 @@ Create a local ruleset that extends the ruleset. In its most basic form this jus
 ```
 cd ~/src/<your-api>
 
-echo 'extends: ["@philsturgeon/spectral-owasp-ruleset"]' > .spectral.yaml
+echo 'extends: ["@stoplightio/spectral-owasp-ruleset"]' > .spectral.yaml
 ```
 
 _If you're using VS Code or Stoplight Studio then the NPM modules will not be available. Instead you can use the CDN hosted version:_
@@ -39,6 +39,11 @@ You should see some output like this:
   44:17      warning  owasp:api3:2019-define-error-responses-400:400 response should be defined.. Missing responses[400]  paths./upload.post.responses
   44:17      warning  owasp:api3:2019-define-error-responses-429:429 response should be defined.. Missing responses[429]  paths./upload.post.responses
   44:17      warning  owasp:api3:2019-define-error-responses-500:500 response should be defined.. Missing responses[500]  paths./upload.post.responses
+  45:15        error  owasp:api3:2019-rate-limit                  All 2XX and 4XX responses should define rate limiting headers.  paths./upload.post.responses[201]
+  47:15        error  owasp:api3:2019-rate-limit                  All 2XX and 4XX responses should define rate limiting headers.  paths./upload.post.responses[401]
+  53:15        error  owasp:api3:2019-rate-limit                  All 2XX and 4XX responses should define rate limiting headers.  paths./upload.post.responses[403]
+  59:15        error  owasp:api3:2019-rate-limit                  All 2XX and 4XX responses should define rate limiting headers.  paths./upload.post.responses[409]
+  65:15        error  owasp:api3:2019-rate-limit                  All 2XX and 4XX responses should define rate limiting headers.  paths./upload.post.responses[422]
  193:16  information  owasp:api2:2019-protection-global-safe      This operation is not protected by any security scheme.  paths./sites.get.security
  210:16  information  owasp:api2:2019-protection-global-safe      This operation is not protected by any security scheme.  paths./species.get.security
 ```
