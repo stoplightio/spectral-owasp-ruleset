@@ -17,7 +17,7 @@ Create a local ruleset that extends the ruleset. In its most basic form this jus
 ```
 cd ~/src/<your-api>
 
-echo 'extends: ["@stoplightio/spectral-owasp-ruleset"]' > .spectral.yaml
+echo 'extends: ["@stoplight/spectral-owasp-ruleset"]' > .spectral.yaml
 ```
 
 _If you're using VS Code or Stoplight Studio then the NPM modules will not be available. Instead you can use the CDN hosted version:_
