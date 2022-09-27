@@ -1,5 +1,7 @@
 # Spectral OWASP API Security
 
+[![NPM Downloads](https://img.shields.io/npm/dw/@stoplight/spectral-owasp-ruleset?color=blue)](https://www.npmjs.com/package/@stoplight/spectral-owasp-ruleset) [![Stoplight Forest](https://img.shields.io/ecologi/trees/stoplightinc)][stoplight_forest]
+
 Scan an [OpenAPI](https://spec.openapis.org/oas/v3.1.0) document to detect security issues. As OpenAPI is only describing the surface level of the API it cannot see what is happening in your code, but it can spot obvious issues and outdated standards being used.
 
 ## Installation
