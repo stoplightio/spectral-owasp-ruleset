@@ -403,7 +403,7 @@ export default {
     /**
      * API6:2019 — Mass assignment
      *
-     * The API takes data that client provides and stores it without proper filtering for whitelisted properties. Attackers can try to guess object properties or provide additional object properties in their requests, read the documentation, or check out API endpoints for clues where to find the openings to modify properties they are not supposed to on the data objects stored in the backend.
+     * The API takes data that client provides and stores it without proper filtering for safelisted properties. Attackers can try to guess object properties or provide additional object properties in their requests, read the documentation, or check out API endpoints for clues where to find the openings to modify properties they are not supposed to on the data objects stored in the backend.
      *
      * Use case
      *
