@@ -288,22 +288,7 @@ export default {
         },
       ],
     },
- 
-    /**
-     * @author: Jason Harmon <https://github.com/jharmn>
-     */
-    "owasp:api3:2019-define-error-responses-429": {
-      description: "429 response should be defined.",
-      message: "{{description}}. Missing {{property}}",
-      severity: DiagnosticSeverity.Warning,
-      given: "$.paths..responses",
-      then: [
-        {
-          field: "429",
-          function: truthy,
-        },
-      ],
-    },
+
     
     /**
      * @author: Jason Harmon <https://github.com/jharmn>
@@ -386,6 +371,22 @@ export default {
         function: defined,
       },
       severity: DiagnosticSeverity.Error,
+    },
+
+    /**
+     * @author: Jason Harmon <https://github.com/jharmn>
+     */
+    "owasp:api3:2019-rate-limit-responses-429": {
+      description: "429 response should be defined.",
+      message: "{{description}}. Missing {{property}}",
+      severity: DiagnosticSeverity.Warning,
+      given: "$.paths..responses",
+      then: [
+        {
+          field: "429",
+          function: truthy,
+        },
+      ],
     },
 
     /**
