@@ -77,8 +77,8 @@ export default {
      * @author: Phil Sturgeon <https://github.com/philsturgeon>
      */
     "owasp:api2:2019-no-http-basic": {
-      description: "Basic authentication credentials transported over network are more susceptible to interception than other forms of authentication, and as they are not encrypted it means passwords and tokens are more easily leaked.",
       message: "Security scheme uses HTTP Basic. Use a more secure authentication method, like OAuth 2.0.",
+      description: "Basic authentication credentials transported over network are more susceptible to interception than other forms of authentication, and as they are not encrypted it means passwords and tokens are more easily leaked.",
       severity: DiagnosticSeverity.Error,
       given: "$.components.securitySchemes[*]",
       then: {
@@ -95,9 +95,9 @@ export default {
      * @see: https://github.com/italia/api-oas-checker/blob/master/rules/secrets-parameters.yml
      */
     "owasp:api2:2019-no-api-keys-in-url": {
-      description:
-        "API Keys are (usually opaque) strings that\nare passed in headers, cookies or query parameters\nto access APIs.\nThose keys can be eavesdropped, especially when they are stored\nin cookies or passed as URL parameters.\n```\nsecurity:\n- ApiKey: []\npaths:\n  /books: {}\n  /users: {}\nsecuritySchemes:\n  ApiKey:\n    type: apiKey\n    in: cookie\n    name: X-Api-Key\n```",
       message: "ApiKey passed in URL: {{error}}.",
+      description:
+      "API Keys are (usually opaque) strings that\nare passed in headers, cookies or query parameters\nto access APIs.\nThose keys can be eavesdropped, especially when they are stored\nin cookies or passed as URL parameters.\n```\nsecurity:\n- ApiKey: []\npaths:\n  /books: {}\n  /users: {}\nsecuritySchemes:\n  ApiKey:\n    type: apiKey\n    in: cookie\n    name: X-Api-Key\n```",
       severity: DiagnosticSeverity.Error,
       formats: [oas3],
       recommended: true,
@@ -117,10 +117,10 @@ export default {
      * @see: https://github.com/italia/api-oas-checker/blob/master/rules/secrets-parameters.yml
      */
     "owasp:api2:2019-no-credentials-in-url": {
+      message: "Security credentials detected in path parameter: {{value}}.",
       description:
         "URL parameters MUST NOT contain credentials such as apikey, password, or secret. See [RAC_GEN_004](https://docs.italia.it/italia/piano-triennale-ict/lg-modellointeroperabilita-docs/it/bozza/doc/04_Raccomandazioni%20di%20implementazione/04_raccomandazioni-tecniche-generali/01_globali.html?highlight=credenziali#rac-gen-004-non-passare-credenziali-o-dati-riservati-nellurl)",
-      message: "Security credentials detected in path parameter: {{value}}.",
-      severity: DiagnosticSeverity.Error,
+        severity: DiagnosticSeverity.Error,
       formats: [oas3],
       recommended: true,
       given: ["$..parameters[?(@ && @.in && @.in.match(/query|path/))].name"],
@@ -140,9 +140,9 @@ export default {
      * @see: https://github.com/italia/api-oas-checker/blob/master/security/securitySchemes_insecure.yml#L38
      */
     "owasp:api2:2019-auth-insecure-schemes": {
+      message: "Authentication scheme is considered outdated or insecure: {{value}}.",
       description:
         "There are many [HTTP authorization schemes](https://www.iana.org/assignments/http-authschemes/) but some of them are now considered insecure, such as negotiating authentication using specifications like NTLM or OAuth v1.",
-      message: "Authentication scheme is considered outdated or insecure: {{value}}.",
       severity: DiagnosticSeverity.Error,
       formats: [oas3],
       given: ['$..[securitySchemes][?(@.type=="http")].scheme'],
@@ -161,8 +161,8 @@ export default {
      * @see: https://github.com/italia/api-oas-checker/blob/master/security/securitySchemes.yml
      */
     "owasp:api2:2019-jwt-best-practices": {
-      description: "JSON Web Tokens RFC7519 is a compact, URL-safe, means of representing claims to be transferred between two parties. JWT can be enclosed in encrypted or signed tokens like JWS and JWE.\n\nThe [JOSE IANA registry](https://www.iana.org/assignments/jose/jose.xhtml) provides algorithms information.\n\nRFC8725 describes common pitfalls in the JWx specifications and in\ntheir implementations, such as:\n- the ability to ignore algorithms, eg. `{\"alg\": \"none\"}`;\n- using insecure algorithms like `RSASSA-PKCS1-v1_5` eg. `{\"alg\": \"RS256\"}`.\nAn API using JWT should explicit in the `description`\nthat the implementation conforms to RFC8725.\n```\ncomponents:\n  securitySchemes:\n    JWTBearer:\n      type: http\n      scheme: bearer\n      bearerFormat: JWT\n      description: |-\n        A bearer token in the format of a JWS and conformato\n        to the specifications included in RFC8725.\n```",
       message: "Security schemes using JWTs must explicitly declare support for RFC8725 in the description.",
+      description: "JSON Web Tokens RFC7519 is a compact, URL-safe, means of representing claims to be transferred between two parties. JWT can be enclosed in encrypted or signed tokens like JWS and JWE.\n\nThe [JOSE IANA registry](https://www.iana.org/assignments/jose/jose.xhtml) provides algorithms information.\n\nRFC8725 describes common pitfalls in the JWx specifications and in\ntheir implementations, such as:\n- the ability to ignore algorithms, eg. `{\"alg\": \"none\"}`;\n- using insecure algorithms like `RSASSA-PKCS1-v1_5` eg. `{\"alg\": \"RS256\"}`.\nAn API using JWT should explicit in the `description`\nthat the implementation conforms to RFC8725.\n```\ncomponents:\n  securitySchemes:\n    JWTBearer:\n      type: http\n      scheme: bearer\n      bearerFormat: JWT\n      description: |-\n        A bearer token in the format of a JWS and conformato\n        to the specifications included in RFC8725.\n```",
       severity: DiagnosticSeverity.Error,
       given: [
         "$..[securitySchemes][?(@.type==\"oauth2\")]",
@@ -188,8 +188,8 @@ export default {
      * @see: https://github.com/italia/api-oas-checker/blob/master/security/security.yml
      */
     "owasp:api2:2019-protection-global-unsafe": {
-      description: "Your API should be protected by a `security` rule either at\nglobal or operation level.\nAll operations should be protected especially when they\nnot safe (methods that do not alter the state of the server) \nHTTP methods like `POST`, `PUT`, `PATCH` and `DELETE`.\nThis is done with one or more non-empty `security` rules.\n\nSecurity rules are defined in the `securityScheme` section.\n\nAn example of a security rule applied at global level.\n\n```\nsecurity:\n- BasicAuth: []\npaths:\n  /books: {}\n  /users: {}\nsecuritySchemes:\n  BasicAuth:\n    scheme: http\n    type: basic\n```\n\nAn example of a security rule applied at operation level, which\neventually overrides the global one\n\n```\npaths:\n  /books:\n    post:\n      security:\n      - AccessToken: []\nsecuritySchemes:\n  BasicAuth:\n    scheme: http\n    type: basic\n  AccessToken:\n    scheme: http\n    type: bearer\n    bearerFormat: JWT\n```",
       message: "This operation is not protected by any security scheme.",
+      description: "Your API should be protected by a `security` rule either at\nglobal or operation level.\nAll operations should be protected especially when they\nnot safe (methods that do not alter the state of the server) \nHTTP methods like `POST`, `PUT`, `PATCH` and `DELETE`.\nThis is done with one or more non-empty `security` rules.\n\nSecurity rules are defined in the `securityScheme` section.\n\nAn example of a security rule applied at global level.\n\n```\nsecurity:\n- BasicAuth: []\npaths:\n  /books: {}\n  /users: {}\nsecuritySchemes:\n  BasicAuth:\n    scheme: http\n    type: basic\n```\n\nAn example of a security rule applied at operation level, which\neventually overrides the global one\n\n```\npaths:\n  /books:\n    post:\n      security:\n      - AccessToken: []\nsecuritySchemes:\n  BasicAuth:\n    scheme: http\n    type: basic\n  AccessToken:\n    scheme: http\n    type: bearer\n    bearerFormat: JWT\n```",
       severity: DiagnosticSeverity.Error,
       given: "$",
       then: [
@@ -212,8 +212,8 @@ export default {
     },
     
     "owasp:api2:2019-protection-global-unsafe-strict": {
-      description: "Check if the operation is protected at operation level.\nOtherwise, check the global `#/security` property.",
       message: "This operation is not protected by any security scheme.",
+      description: "Check if the operation is protected at operation level.\nOtherwise, check the global `#/security` property.",
       severity: DiagnosticSeverity.Information,
       given: "$",
       then: [
@@ -235,8 +235,8 @@ export default {
       ],
     },
     "owasp:api2:2019-protection-global-safe": {
-      description: "Check if the operation is protected at operation level.\nOtherwise, check the global `#/security` property.",
       message: "This operation is not protected by any security scheme.",
+      description: "Check if the operation is protected at operation level.\nOtherwise, check the global `#/security` property.",
       severity: DiagnosticSeverity.Information,
       given: "$",
       then: [
@@ -276,15 +276,27 @@ export default {
     /**
      * @author: Jason Harmon <https://github.com/jharmn>
      */
-    "owasp:api3:2019-define-error-responses-400": {
-      description: "400 response should be defined.",
-      message: "{{description}}. Missing {{property}}",
+    "owasp:api3:2019-define-error-validation": {
+      message: "Missing error validation response of either 400 or 422.",
+      description: "Carefully define schemas for all the API responses, including either 400 or 422 responses which describe errors caused by invalid requests.",
       severity: DiagnosticSeverity.Warning,
       given: "$.paths..responses",
       then: [
         {
-          field: "400",
-          function: truthy,
+          function: schema,
+          functionOptions: {
+            schema: {
+              type: 'object',
+              oneOf: [
+                {
+                  required: ['400'],
+                },
+                {
+                  required: ['422'],
+                },
+              ],
+            }
+          }
         },
       ],
     },
@@ -294,8 +306,8 @@ export default {
      * @author: Jason Harmon <https://github.com/jharmn>
      */
     "owasp:api3:2019-define-error-responses-500": {
-      description: "500 response should be defined.",
       message: "{{description}}. Missing {{property}}",
+      description: "500 response should be defined.",
       severity: DiagnosticSeverity.Warning,
       given: "$.paths..responses",
       then: [
