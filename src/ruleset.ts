@@ -301,6 +301,21 @@ export default {
       ],
     },
 
+    /**
+     * @author: Jason Harmon <https://github.com/jharmn>
+     */
+     "owasp:api3:2019-define-error-responses-401": {
+      message: "{{description}}. Missing {{property}}",
+      description: "401 response should be defined.",
+      severity: DiagnosticSeverity.Warning,
+      given: "$.paths..responses",
+      then: [
+        {
+          field: "401",
+          function: truthy,
+        },
+      ],
+    },
     
     /**
      * @author: Jason Harmon <https://github.com/jharmn>
