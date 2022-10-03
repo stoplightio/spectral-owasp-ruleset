@@ -270,6 +270,7 @@ export default {
      * - ❌ Carefully define schemas for all the API responses.
      * - ✅ Do not forget about error responses, define proper schemas as well.
      * - 🟠 Identify all the sensitive data or Personally Identifiable Information (PII), and justify its use.
+     * https://github.com/stoplightio/spectral-owasp-ruleset/issues/11
      * - ❌ Enforce response checks to prevent accidental leaks of data or exceptions.
      */
 
@@ -443,7 +444,7 @@ export default {
      * - ❌ Do not automatically bind incoming data and internal objects.
      * - ✅ Explicitly define all the parameters and payloads you are expecting.
      * - 🟠 Use the readOnly property set to true in object schemas for all properties that can be retrieved through APIs but should never be modified.
-     * - 🟠 Precisely define the schemas, types, and patterns you will accept in requests at design time and enforce them at runtime.
+     * - ❌ Precisely define the schemas, types, and patterns you will accept in requests at design time and enforce them at runtime.
      */
     
     /**
@@ -506,7 +507,9 @@ export default {
      * - ✅ Missing, outdated, or misconfigured TLS
      * - ❌ Exposed storage or server management panels
      * - 🟠 Missing CORS policy or security headers
+     * https://github.com/stoplightio/spectral-owasp-ruleset/issues/5
      * - 🟠 Error messages with stack traces
+     * https://github.com/stoplightio/spectral-owasp-ruleset/issues/12
      * - ❌ Unnecessary features enabled
      *
      * How to prevent
@@ -570,30 +573,6 @@ export default {
      * - 🟠 Strictly define all input data, such as schemas, types, and string patterns, and enforce them at runtime.
      * - ❌ Validate, filter, and sanitize all incoming data.
      * - 🟠 Define, limit, and enforce API outputs to prevent data leaks.
-     */
-
-    // 'owasp:api8:2019-injection':
-    // 'https://apisecurity.io/encyclopedia/content/owasp/api8-injection',
-
-    /**
-     * API9:2019 — Improper assets management
-     *
-     * Attackers find non-production versions of the API (for example, staging, testing, beta, or earlier versions) that are not as well protected as the production API, and use those to launch their attacks.
-     *
-     * Use case
-     * - ❌ DevOps, the cloud, containers, and Kubernetes make having multiple deployments easy (for example, dev, test, branches, staging, old versions).
-     * - ❌ Desire to maintain backward compatibility forces to leave old APIs running.
-     * - 🟠 Old or non-production versions are not properly maintained, but these endpoints still have access to production data.
-     * - ❌ Once authenticated with one endpoint, attackers may switch to the other, production one.
-     *
-     * How to prevent
-     * - ❌ Keep an up-to-date inventory all API hosts.
-     * - ❌ Limit access to anything that should not be public.
-     * - ❌ Limit access to production data, and segregate access to production and non-production data.
-     * - ❌ Implement additional external controls, such as API firewalls.
-     * - 🟠 Properly retire old versions of APIs or backport security fixes to them.
-     * - 🟠 Implement strict authentication, redirects, CORS, and so forth.
-     *   - https://github.com/stoplightio/spectral-owasp-ruleset/issues/5
      */
 
   },
