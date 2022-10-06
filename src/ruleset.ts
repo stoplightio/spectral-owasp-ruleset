@@ -357,7 +357,7 @@ export default {
     /**
      * @author: Phil Sturgeon <https://github.com/philsturgeon>
      */
-     "owasp:api3:2019-rate-limit": {
+     "owasp:api4:2019-rate-limit": {
       message: "All 2XX and 4XX responses should define rate limiting headers.",
       description: "Define proper rate limiting to avoid attackers overloading the API. There are many ways to implement rate-limiting, but most of them involve using HTTP headers, and there are two popular ways to do that:\n\nIETF Draft HTTP RateLimit Headers:. https://datatracker.ietf.org/doc/draft-ietf-httpapi-ratelimit-headers/\n\nCustomer headers like X-Rate-Limit-Limit (Twitter: https://developer.twitter.com/en/docs/twitter-api/rate-limits) or X-RateLimit-Limit (GitHub: https://docs.github.com/en/rest/overview/resources-in-the-rest-api)",
       formats: [oas3],
@@ -388,7 +388,7 @@ export default {
     /**
      * @author: Phil Sturgeon <https://github.com/philsturgeon>
      */
-     "owasp:api3:2019-rate-limit-retry-after": {
+     "owasp:api4:2019-rate-limit-retry-after": {
       message: "A 429 response should define a Retry-After header.",
       description:
         "Define proper rate limiting to avoid attackers overloading the API. Part of that involves setting a Retry-After header so well meaning consumers are not polling and potentially exacerbating problems.",
@@ -404,7 +404,7 @@ export default {
     /**
      * @author: Jason Harmon <https://github.com/jharmn>
      */
-    "owasp:api3:2019-rate-limit-responses-429": {
+    "owasp:api4:2019-rate-limit-responses-429": {
       description: "429 response should be defined.",
       message: "{{description}}. Missing {{property}}",
       severity: DiagnosticSeverity.Warning,

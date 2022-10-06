@@ -1,7 +1,7 @@
 import { DiagnosticSeverity } from "@stoplight/types";
 import testRule from "./__helpers__/helper";
 
-testRule("owasp:api3:2019-rate-limit-retry-after", [
+testRule("owasp:api4:2019-rate-limit-retry-after", [
 	{
 		name: "valid case",
 		document: {
