@@ -29,7 +29,7 @@ export default {
         "OWASP API1:2019 - Use random IDs that cannot be guessed. UUIDs are preferred.",
       severity: DiagnosticSeverity.Error,
       given:
-        '$.paths..parameters[*].[?(@property === "name" && (@ === "id" || @.match(/(_id|Id|-id)$/)))]^.schema',
+        '$.paths..parameters[*][?(@property === "name" && (@ === "id" || @.match(/(_id|Id|-id)$/)))]^.schema',
       then: {
         function: schema,
         functionOptions: {
@@ -361,7 +361,7 @@ export default {
       message: "All 2XX and 4XX responses should define rate limiting headers.",
       description: "Define proper rate limiting to avoid attackers overloading the API. There are many ways to implement rate-limiting, but most of them involve using HTTP headers, and there are two popular ways to do that:\n\nIETF Draft HTTP RateLimit Headers:. https://datatracker.ietf.org/doc/draft-ietf-httpapi-ratelimit-headers/\n\nCustomer headers like X-Rate-Limit-Limit (Twitter: https://developer.twitter.com/en/docs/twitter-api/rate-limits) or X-RateLimit-Limit (GitHub: https://docs.github.com/en/rest/overview/resources-in-the-rest-api)",
       formats: [oas3],
-      given: "$.paths.[*]..responses[?(@property.match(/^(2|4)/))]",
+      given: "$.paths[*]..responses[?(@property.match(/^(2|4)/))]",
       then: {
         field: 'headers',
         function: schema,
