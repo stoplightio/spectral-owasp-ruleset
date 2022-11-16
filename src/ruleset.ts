@@ -1,10 +1,56 @@
 import { defined, truthy, pattern, schema, falsy } from "@stoplight/spectral-functions";
-import { oas2, oas3 } from "@stoplight/spectral-formats";
+import { oas2, oas3, oas3_0, oas3_1 } from "@stoplight/spectral-formats";
 import { DiagnosticSeverity } from "@stoplight/types";
 import checkSecurity from "./functions/checkSecurity";
 
 export default {
   formats: [oas2, oas3],
+
+  aliases: {
+    ArrayProperties: {
+      targets: [
+        {
+          formats: [oas2, oas3_0],
+          given: [
+            // Check for type: 'array'
+            '$..[?(@ && @.type=="array")]'
+          ]
+        },
+        {
+          formats: [oas3_1],
+          given: [
+            // Still check for type: 'array'
+            '$..[?(@ && @.type=="array")]',
+            
+            // also check for type: ['array', ...]
+            '$..type[?(@ == "array")]^',
+          ]
+        }
+      ]
+    },
+    StringProperties: {
+      targets: [
+        {
+          formats: [oas2, oas3_0],
+          given: [
+            // Check for type: 'string'
+            '$..[?(@ && @.type=="string")]'
+          ]
+        },
+        {
+          formats: [oas3_1],
+          given: [
+            // Still check for type: 'string'
+            '$..[?(@ && @.type=="string")]',
+            
+            // also check for type: ['string', ...]
+            '$..type[?(@ == "string")]^',
+          ]
+        }
+      ]
+    }
+  },
+  
   rules: {
     /**
      * API1:2019 - Broken Object Level Authorization
@@ -423,7 +469,7 @@ export default {
       message: "Schema of type array must specify maxItems.",
       description: "Array size should be limited to mitigate resource exhaustion attacks. This can be done using `maxItems`. You should ensure that the subschema in `items` is constrained too.",
       severity: DiagnosticSeverity.Error,
-      given: '$..[?(@ && @.type=="array")]',
+      given: '#ArrayProperties',
       then: [
         {
           field: "maxItems",
@@ -440,7 +486,7 @@ export default {
       message: "Schema of type string must specify maxLength.",
       description: "String size should be limited to mitigate resource exhaustion attacks. This can be done using `maxLength`.",
       severity: DiagnosticSeverity.Error,
-      given: '$..[?(@ && @.type=="string")]',
+      given: '#StringProperties',
       then: [
         {
           field: "maxLength",
