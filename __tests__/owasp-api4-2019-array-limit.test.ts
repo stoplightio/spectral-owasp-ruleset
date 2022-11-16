@@ -1,6 +1,8 @@
 import { DiagnosticSeverity } from "@stoplight/types";
 import testRule from "./__helpers__/helper";
 
+// TODO oas3.1 tests
+
 testRule("owasp:api4:2019-array-limit", [
 	{
 		name: "valid case: oas2",

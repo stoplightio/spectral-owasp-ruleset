@@ -1,4 +1,4 @@
-import { defined, truthy, pattern, schema, falsy } from "@stoplight/spectral-functions";
+import { defined, truthy, pattern, schema, falsy, xor } from "@stoplight/spectral-functions";
 import { oas2, oas3, oas3_0, oas3_1 } from "@stoplight/spectral-formats";
 import { DiagnosticSeverity } from "@stoplight/types";
 import checkSecurity from "./functions/checkSecurity";
@@ -23,7 +23,28 @@ export default {
             '$..[?(@ && @.type=="array")]',
             
             // also check for type: ['array', ...]
-            '$..type[?(@ == "array")]^',
+            '$..[?(@ && @.type && !@.type.match && @.type.includes("array"))]',
+          ]
+        }
+      ]
+    },
+    IntegerProperties: {
+      targets: [
+        {
+          formats: [oas2, oas3_0],
+          given: [
+            // Check for type: 'string'
+            '$..[?(@ && @.type=="integer")]'
+          ]
+        },
+        {
+          formats: [oas3_1],
+          given: [
+            // Still check for type: 'integer'
+            '$..[?(@ && @.type=="integer")]',
+            
+            // also check for type: ['integer', ...]
+            '$..[?(@ && @.type && !@.type.match && @.type.includes("integer"))]',
           ]
         }
       ]
@@ -44,7 +65,7 @@ export default {
             '$..[?(@ && @.type=="string")]',
             
             // also check for type: ['string', ...]
-            '$..type[?(@ == "string")]^',
+            '$..[?(@ && @.type && !@.type.match && @.type.includes("string"))]',
           ]
         }
       ]
@@ -453,12 +474,10 @@ export default {
       message: "{{description}}. Missing {{property}}",
       severity: DiagnosticSeverity.Warning,
       given: "$.paths..responses",
-      then: [
-        {
-          field: "429",
-          function: truthy,
-        },
-      ],
+      then: {
+        field: "429",
+        function: truthy,
+      },
     },
 
     /**
@@ -470,26 +489,79 @@ export default {
       description: "Array size should be limited to mitigate resource exhaustion attacks. This can be done using `maxItems`. You should ensure that the subschema in `items` is constrained too.",
       severity: DiagnosticSeverity.Error,
       given: '#ArrayProperties',
-      then: [
-        {
-          field: "maxItems",
-          function: defined,
-        },
-      ]
+      then: {
+        field: "maxItems",
+        function: defined,
+      },
     },
 
     /**
      * @author: Roberto Polli <https://github.com/ioggstream>
      * @see: https://github.com/italia/api-oas-checker/blob/master/security/array.yml
      */
-    "owasp:api4:2019-string-limit": {
+     "owasp:api4:2019-string-limit": {
       message: "Schema of type string must specify maxLength.",
       description: "String size should be limited to mitigate resource exhaustion attacks. This can be done using `maxLength`.",
       severity: DiagnosticSeverity.Error,
       given: '#StringProperties',
+      then: {
+        field: "maxLength",
+        function: defined,
+      },
+    },
+
+    /**
+     * @author: Roberto Polli <https://github.com/ioggstream>
+     * @see: https://github.com/italia/api-oas-checker/blob/master/security/array.yml
+     */
+    "owasp:api4:2019-integer-limit": {
+      message: "Schema of type integer must specify minimum and maximum.",
+      description: "Integers should be limited to mitigate resource exhaustion attacks. This can be done using `minimum` and `maximum`, which can with e.g.: avoiding negative numbers when positive are expected, or reducing unreasonable iterations like doing something 1000 times when 10 is expected.",
+      severity: DiagnosticSeverity.Error,
+      formats: [oas3_1],
+      given: '#IntegerProperties',
       then: [
         {
-          field: "maxLength",
+          function: xor,
+          functionOptions: {
+            properties: ['minimum', 'exclusiveMinimum']
+          }
+        },
+        {
+          function: xor,
+          functionOptions: {
+            properties: ['maximum', 'exclusiveMaximum']
+          }
+        },
+      ],
+    },
+ 
+    "owasp:api4:2019-integer-limit-legacy": {
+      message: "Schema of type integer must specify minimum and maximum.",
+      description: "Integers should be limited to mitigate resource exhaustion attacks. This can be done using `minimum` and `maximum`, which can with e.g.: avoiding negative numbers when positive are expected, or reducing unreasonable iterations like doing something 1000 times when 10 is expected.",
+      severity: DiagnosticSeverity.Error,
+      formats: [oas2, oas3_0],
+      given: '#IntegerProperties',
+      then: [
+        {
+          field: "minimum",
+          function: defined,
+        },
+        {
+          field: "maximum",
+          function: defined,
+        },
+      ],
+    },
+
+    "owasp:api4:2019-integer-format": {
+      message: "Schema of type integer must specify format (int32 or int64).",
+      description: "Integers should be limited to mitigate resource exhaustion attacks. Specifying whether int32 or int64 is expected via `format`.",
+      severity: DiagnosticSeverity.Error,
+      given: '#IntegerProperties',
+      then: [
+        {
+          field: "format",
           function: defined,
         },
       ]
