@@ -412,7 +412,7 @@ export default {
      *
      * How to prevent
      * - ✅ Define proper rate limiting.
-     * - ❌ Limit maximums on request parameter sizes
+     * - ✅ Limit maximums on request parameter sizes
      * - ❌ Tailor the rate limiting to be match what API methods, clients, or addresses need or should be allowed to get.
      * - ❌ Add checks on compression ratios.
      * - ❌ Define limits for container resources.
