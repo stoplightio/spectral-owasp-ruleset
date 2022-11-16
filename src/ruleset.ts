@@ -372,7 +372,7 @@ export default {
     /**
      * @author: Jason Harmon <https://github.com/jharmn>
      */
-     "owasp:api3:2019-define-error-responses-401": {
+    "owasp:api3:2019-define-error-responses-401": {
       message: "{{description}}. Missing {{property}}",
       description: "401 response should be defined.",
       severity: DiagnosticSeverity.Warning,
@@ -422,7 +422,7 @@ export default {
     /**
      * @author: Phil Sturgeon <https://github.com/philsturgeon>
      */
-     "owasp:api4:2019-rate-limit": {
+    "owasp:api4:2019-rate-limit": {
       message: "All 2XX and 4XX responses should define rate limiting headers.",
       description: "Define proper rate limiting to avoid attackers overloading the API. There are many ways to implement rate-limiting, but most of them involve using HTTP headers, and there are two popular ways to do that:\n\nIETF Draft HTTP RateLimit Headers:. https://datatracker.ietf.org/doc/draft-ietf-httpapi-ratelimit-headers/\n\nCustomer headers like X-Rate-Limit-Limit (Twitter: https://developer.twitter.com/en/docs/twitter-api/rate-limits) or X-RateLimit-Limit (GitHub: https://docs.github.com/en/rest/overview/resources-in-the-rest-api)",
       severity: DiagnosticSeverity.Error,
@@ -453,7 +453,7 @@ export default {
     /**
      * @author: Phil Sturgeon <https://github.com/philsturgeon>
      */
-     "owasp:api4:2019-rate-limit-retry-after": {
+    "owasp:api4:2019-rate-limit-retry-after": {
       message: "A 429 response should define a Retry-After header.",
       description:
         "Define proper rate limiting to avoid attackers overloading the API. Part of that involves setting a Retry-After header so well meaning consumers are not polling and potentially exacerbating problems.",
@@ -496,10 +496,9 @@ export default {
     },
 
     /**
-     * @author: Roberto Polli <https://github.com/ioggstream>
-     * @see: https://github.com/italia/api-oas-checker/blob/master/security/array.yml
+     * @author: Phil Sturgeon <https://github.com/philsturgeon>
      */
-     "owasp:api4:2019-string-limit": {
+    "owasp:api4:2019-string-limit": {
       message: "Schema of type string must specify maxLength.",
       description: "String size should be limited to mitigate resource exhaustion attacks. This can be done using `maxLength`.",
       severity: DiagnosticSeverity.Error,
@@ -511,8 +510,33 @@ export default {
     },
 
     /**
-     * @author: Roberto Polli <https://github.com/ioggstream>
-     * @see: https://github.com/italia/api-oas-checker/blob/master/security/array.yml
+     * @author: Phil Sturgeon <https://github.com/philsturgeon>
+     */
+    "owasp:api4:2019-string-restricted": {
+      message: "Schema of type string must specify a format or pattern.",
+      description: "To avoid unexpected values being sent or leaked, ensure that strings have either a format or a RegEx pattern. This can be done using `format` or `pattern`.",
+      severity: DiagnosticSeverity.Error,
+      given: '#StringProperties',
+      then: {
+        function: schema,
+        functionOptions: {
+          schema: {
+            type: 'object',
+            oneOf: [
+              {
+                required: ['format'],
+              },
+              {
+                required: ['pattern'],
+              },
+            ],
+          }
+        }
+      },
+    },
+
+    /**
+     * @author: Phil Sturgeon <https://github.com/philsturgeon>
      */
     "owasp:api4:2019-integer-limit": {
       message: "Schema of type integer must specify minimum and maximum.",
@@ -536,6 +560,9 @@ export default {
       ],
     },
  
+    /**
+     * @author: Phil Sturgeon <https://github.com/philsturgeon>
+     */
     "owasp:api4:2019-integer-limit-legacy": {
       message: "Schema of type integer must specify minimum and maximum.",
       description: "Integers should be limited to mitigate resource exhaustion attacks. This can be done using `minimum` and `maximum`, which can with e.g.: avoiding negative numbers when positive are expected, or reducing unreasonable iterations like doing something 1000 times when 10 is expected.",
@@ -554,6 +581,9 @@ export default {
       ],
     },
 
+    /**
+     * @author: Phil Sturgeon <https://github.com/philsturgeon>
+     */
     "owasp:api4:2019-integer-format": {
       message: "Schema of type integer must specify format (int32 or int64).",
       description: "Integers should be limited to mitigate resource exhaustion attacks. Specifying whether int32 or int64 is expected via `format`.",
