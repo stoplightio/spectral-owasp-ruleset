@@ -39,12 +39,14 @@ testRule("owasp:api2:2019-auth-insecure-schemes", [
     },
     errors: [
       {
-        message: "Authentication scheme is considered outdated or insecure: negotiate.",
+        message:
+          "Authentication scheme is considered outdated or insecure: negotiate.",
         path: ["components", "securitySchemes", "bad negotiate", "scheme"],
         severity: DiagnosticSeverity.Error,
       },
       {
-        message: "Authentication scheme is considered outdated or insecure: oauth.",
+        message:
+          "Authentication scheme is considered outdated or insecure: oauth.",
         path: ["components", "securitySchemes", "bad oauth", "scheme"],
         severity: DiagnosticSeverity.Error,
       },

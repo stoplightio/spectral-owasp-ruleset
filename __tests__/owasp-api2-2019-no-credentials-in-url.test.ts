@@ -1,12 +1,12 @@
-import { DiagnosticSeverity } from '@stoplight/types';
-import testRule from './__helpers__/helper';
+import { DiagnosticSeverity } from "@stoplight/types";
+import testRule from "./__helpers__/helper";
 
-testRule('owasp:api2:2019-no-credentials-in-url', [
+testRule("owasp:api2:2019-no-credentials-in-url", [
   {
-    name: 'valid case',
+    name: "valid case",
     document: {
-      openapi: '3.1.0',
-      info: { version: '1.0' },
+      openapi: "3.1.0",
+      info: { version: "1.0" },
       "/foo/{id}": {
         get: {
           description: "get",
@@ -29,10 +29,10 @@ testRule('owasp:api2:2019-no-credentials-in-url', [
   },
 
   {
-    name: 'invalid case',
+    name: "invalid case",
     document: {
-      openapi: '3.1.0',
-      info: { version: '1.0' },
+      openapi: "3.1.0",
+      info: { version: "1.0" },
       paths: {
         "/foo/{api-key}": {
           get: {
@@ -86,44 +86,46 @@ testRule('owasp:api2:2019-no-credentials-in-url', [
             ],
           },
         },
-			},
+      },
     },
     errors: [
       {
-        message: 'Security credentials detected in path parameter: client_secret.',
+        message:
+          "Security credentials detected in path parameter: client_secret.",
         severity: DiagnosticSeverity.Error,
       },
       {
-        message: 'Security credentials detected in path parameter: token.',
+        message: "Security credentials detected in path parameter: token.",
         severity: DiagnosticSeverity.Error,
       },
       {
-        message: 'Security credentials detected in path parameter: refresh_token.',
+        message:
+          "Security credentials detected in path parameter: refresh_token.",
         severity: DiagnosticSeverity.Error,
       },
 
       {
-        message: 'Security credentials detected in path parameter: id_token.',
+        message: "Security credentials detected in path parameter: id_token.",
         severity: DiagnosticSeverity.Error,
       },
       {
-        message: 'Security credentials detected in path parameter: password.',
+        message: "Security credentials detected in path parameter: password.",
         severity: DiagnosticSeverity.Error,
       },
       {
-        message: 'Security credentials detected in path parameter: secret.',
+        message: "Security credentials detected in path parameter: secret.",
         severity: DiagnosticSeverity.Error,
       },
       {
-        message: 'Security credentials detected in path parameter: apikey.',
+        message: "Security credentials detected in path parameter: apikey.",
         severity: DiagnosticSeverity.Error,
       },
       {
-        message: 'Security credentials detected in path parameter: api-key.',
+        message: "Security credentials detected in path parameter: api-key.",
         severity: DiagnosticSeverity.Error,
       },
       {
-        message: 'Security credentials detected in path parameter: API-KEY.',
+        message: "Security credentials detected in path parameter: API-KEY.",
         severity: DiagnosticSeverity.Error,
       },
     ],

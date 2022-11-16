@@ -1,4 +1,11 @@
-import { defined, truthy, pattern, schema, falsy, xor } from "@stoplight/spectral-functions";
+import {
+  defined,
+  truthy,
+  pattern,
+  schema,
+  falsy,
+  xor,
+} from "@stoplight/spectral-functions";
 import { oas2, oas3, oas3_0, oas3_1 } from "@stoplight/spectral-formats";
 import { DiagnosticSeverity } from "@stoplight/types";
 import checkSecurity from "./functions/checkSecurity";
@@ -13,20 +20,20 @@ export default {
           formats: [oas2, oas3_0],
           given: [
             // Check for type: 'array'
-            '$..[?(@ && @.type=="array")]'
-          ]
+            '$..[?(@ && @.type=="array")]',
+          ],
         },
         {
           formats: [oas3_1],
           given: [
             // Still check for type: 'array'
             '$..[?(@ && @.type=="array")]',
-            
+
             // also check for type: ['array', ...]
             '$..[?(@ && @.type && !@.type.match && @.type.includes("array"))]',
-          ]
-        }
-      ]
+          ],
+        },
+      ],
     },
     IntegerProperties: {
       targets: [
@@ -34,20 +41,20 @@ export default {
           formats: [oas2, oas3_0],
           given: [
             // Check for type: 'string'
-            '$..[?(@ && @.type=="integer")]'
-          ]
+            '$..[?(@ && @.type=="integer")]',
+          ],
         },
         {
           formats: [oas3_1],
           given: [
             // Still check for type: 'integer'
             '$..[?(@ && @.type=="integer")]',
-            
+
             // also check for type: ['integer', ...]
             '$..[?(@ && @.type && !@.type.match && @.type.includes("integer"))]',
-          ]
-        }
-      ]
+          ],
+        },
+      ],
     },
     StringProperties: {
       targets: [
@@ -55,23 +62,23 @@ export default {
           formats: [oas2, oas3_0],
           given: [
             // Check for type: 'string'
-            '$..[?(@ && @.type=="string")]'
-          ]
+            '$..[?(@ && @.type=="string")]',
+          ],
         },
         {
           formats: [oas3_1],
           given: [
             // Still check for type: 'string'
             '$..[?(@ && @.type=="string")]',
-            
+
             // also check for type: ['string', ...]
             '$..[?(@ && @.type && !@.type.match && @.type.includes("string"))]',
-          ]
-        }
-      ]
-    }
+          ],
+        },
+      ],
+    },
   },
-  
+
   rules: {
     /**
      * API1:2019 - Broken Object Level Authorization
@@ -145,8 +152,10 @@ export default {
      * @author: Phil Sturgeon <https://github.com/philsturgeon>
      */
     "owasp:api2:2019-no-http-basic": {
-      message: "Security scheme uses HTTP Basic. Use a more secure authentication method, like OAuth 2.0.",
-      description: "Basic authentication credentials transported over network are more susceptible to interception than other forms of authentication, and as they are not encrypted it means passwords and tokens are more easily leaked.",
+      message:
+        "Security scheme uses HTTP Basic. Use a more secure authentication method, like OAuth 2.0.",
+      description:
+        "Basic authentication credentials transported over network are more susceptible to interception than other forms of authentication, and as they are not encrypted it means passwords and tokens are more easily leaked.",
       severity: DiagnosticSeverity.Error,
       given: "$.components.securitySchemes[*]",
       then: {
@@ -165,7 +174,7 @@ export default {
     "owasp:api2:2019-no-api-keys-in-url": {
       message: "ApiKey passed in URL: {{error}}.",
       description:
-      "API Keys are (usually opaque) strings that\nare passed in headers, cookies or query parameters\nto access APIs.\nThose keys can be eavesdropped, especially when they are stored\nin cookies or passed as URL parameters.\n```\nsecurity:\n- ApiKey: []\npaths:\n  /books: {}\n  /users: {}\nsecuritySchemes:\n  ApiKey:\n    type: apiKey\n    in: cookie\n    name: X-Api-Key\n```",
+        "API Keys are (usually opaque) strings that\nare passed in headers, cookies or query parameters\nto access APIs.\nThose keys can be eavesdropped, especially when they are stored\nin cookies or passed as URL parameters.\n```\nsecurity:\n- ApiKey: []\npaths:\n  /books: {}\n  /users: {}\nsecuritySchemes:\n  ApiKey:\n    type: apiKey\n    in: cookie\n    name: X-Api-Key\n```",
       severity: DiagnosticSeverity.Error,
       formats: [oas3],
       given: ['$..[securitySchemes][?(@ && @.type=="apiKey")].in'],
@@ -195,7 +204,8 @@ export default {
           field: "name",
           function: pattern,
           functionOptions: {
-            notMatch: "/^.*(client_?secret|token|access_?token|refresh_?token|id_?token|password|secret|api-?key).*$/i",
+            notMatch:
+              "/^.*(client_?secret|token|access_?token|refresh_?token|id_?token|password|secret|api-?key).*$/i",
           },
         },
       ],
@@ -206,7 +216,8 @@ export default {
      * @see: https://github.com/italia/api-oas-checker/blob/master/security/securitySchemes_insecure.yml#L38
      */
     "owasp:api2:2019-auth-insecure-schemes": {
-      message: "Authentication scheme is considered outdated or insecure: {{value}}.",
+      message:
+        "Authentication scheme is considered outdated or insecure: {{value}}.",
       description:
         "There are many [HTTP authorization schemes](https://www.iana.org/assignments/http-authschemes/) but some of them are now considered insecure, such as negotiating authentication using specifications like NTLM or OAuth v1.",
       severity: DiagnosticSeverity.Error,
@@ -227,25 +238,27 @@ export default {
      * @see: https://github.com/italia/api-oas-checker/blob/master/security/securitySchemes.yml
      */
     "owasp:api2:2019-jwt-best-practices": {
-      message: "Security schemes using JWTs must explicitly declare support for RFC8725 in the description.",
-      description: "JSON Web Tokens RFC7519 is a compact, URL-safe, means of representing claims to be transferred between two parties. JWT can be enclosed in encrypted or signed tokens like JWS and JWE.\n\nThe [JOSE IANA registry](https://www.iana.org/assignments/jose/jose.xhtml) provides algorithms information.\n\nRFC8725 describes common pitfalls in the JWx specifications and in\ntheir implementations, such as:\n- the ability to ignore algorithms, eg. `{\"alg\": \"none\"}`;\n- using insecure algorithms like `RSASSA-PKCS1-v1_5` eg. `{\"alg\": \"RS256\"}`.\nAn API using JWT should explicit in the `description`\nthat the implementation conforms to RFC8725.\n```\ncomponents:\n  securitySchemes:\n    JWTBearer:\n      type: http\n      scheme: bearer\n      bearerFormat: JWT\n      description: |-\n        A bearer token in the format of a JWS and conformato\n        to the specifications included in RFC8725.\n```",
+      message:
+        "Security schemes using JWTs must explicitly declare support for RFC8725 in the description.",
+      description:
+        'JSON Web Tokens RFC7519 is a compact, URL-safe, means of representing claims to be transferred between two parties. JWT can be enclosed in encrypted or signed tokens like JWS and JWE.\n\nThe [JOSE IANA registry](https://www.iana.org/assignments/jose/jose.xhtml) provides algorithms information.\n\nRFC8725 describes common pitfalls in the JWx specifications and in\ntheir implementations, such as:\n- the ability to ignore algorithms, eg. `{"alg": "none"}`;\n- using insecure algorithms like `RSASSA-PKCS1-v1_5` eg. `{"alg": "RS256"}`.\nAn API using JWT should explicit in the `description`\nthat the implementation conforms to RFC8725.\n```\ncomponents:\n  securitySchemes:\n    JWTBearer:\n      type: http\n      scheme: bearer\n      bearerFormat: JWT\n      description: |-\n        A bearer token in the format of a JWS and conformato\n        to the specifications included in RFC8725.\n```',
       severity: DiagnosticSeverity.Error,
       given: [
-        "$..[securitySchemes][?(@.type==\"oauth2\")]",
-        "$..[securitySchemes][?(@.bearerFormat==\"jwt\" || @.bearerFormat==\"JWT\")]"
+        '$..[securitySchemes][?(@.type=="oauth2")]',
+        '$..[securitySchemes][?(@.bearerFormat=="jwt" || @.bearerFormat=="JWT")]',
       ],
       then: [
         {
           field: "description",
-          function: truthy
+          function: truthy,
         },
         {
           field: "description",
           function: pattern,
           functionOptions: {
-            match: ".*RFC8725.*"
-          }
-        }
+            match: ".*RFC8725.*",
+          },
+        },
       ],
     },
 
@@ -255,72 +268,56 @@ export default {
      */
     "owasp:api2:2019-protection-global-unsafe": {
       message: "This operation is not protected by any security scheme.",
-      description: "Your API should be protected by a `security` rule either at\nglobal or operation level.\nAll operations should be protected especially when they\nnot safe (methods that do not alter the state of the server) \nHTTP methods like `POST`, `PUT`, `PATCH` and `DELETE`.\nThis is done with one or more non-empty `security` rules.\n\nSecurity rules are defined in the `securityScheme` section.\n\nAn example of a security rule applied at global level.\n\n```\nsecurity:\n- BasicAuth: []\npaths:\n  /books: {}\n  /users: {}\nsecuritySchemes:\n  BasicAuth:\n    scheme: http\n    type: basic\n```\n\nAn example of a security rule applied at operation level, which\neventually overrides the global one\n\n```\npaths:\n  /books:\n    post:\n      security:\n      - AccessToken: []\nsecuritySchemes:\n  BasicAuth:\n    scheme: http\n    type: basic\n  AccessToken:\n    scheme: http\n    type: bearer\n    bearerFormat: JWT\n```",
+      description:
+        "Your API should be protected by a `security` rule either at\nglobal or operation level.\nAll operations should be protected especially when they\nnot safe (methods that do not alter the state of the server) \nHTTP methods like `POST`, `PUT`, `PATCH` and `DELETE`.\nThis is done with one or more non-empty `security` rules.\n\nSecurity rules are defined in the `securityScheme` section.\n\nAn example of a security rule applied at global level.\n\n```\nsecurity:\n- BasicAuth: []\npaths:\n  /books: {}\n  /users: {}\nsecuritySchemes:\n  BasicAuth:\n    scheme: http\n    type: basic\n```\n\nAn example of a security rule applied at operation level, which\neventually overrides the global one\n\n```\npaths:\n  /books:\n    post:\n      security:\n      - AccessToken: []\nsecuritySchemes:\n  BasicAuth:\n    scheme: http\n    type: basic\n  AccessToken:\n    scheme: http\n    type: bearer\n    bearerFormat: JWT\n```",
       severity: DiagnosticSeverity.Error,
       given: "$",
       then: [
         {
-          "function": checkSecurity,
-          "functionOptions": {
-            schemesPath: [
-              'securitySchemes'
-            ],
-            "nullable": true,
-            "methods": [
-              "post",
-              "patch",
-              "delete",
-              "put"
-            ]
-          }
-        }
-      ],
-    },
-    
-    "owasp:api2:2019-protection-global-unsafe-strict": {
-      message: "This operation is not protected by any security scheme.",
-      description: "Check if the operation is protected at operation level.\nOtherwise, check the global `#/security` property.",
-      severity: DiagnosticSeverity.Information,
-      given: "$",
-      then: [
-        {
-          "function": checkSecurity,
-          "functionOptions": {
-            schemesPath: [
-              'securitySchemes'
-            ],
-            "nullable": false,
-            "methods": [
-              "post",
-              "patch",
-              "delete",
-              "put"
-            ]
-          }
-        }
+          function: checkSecurity,
+          functionOptions: {
+            schemesPath: ["securitySchemes"],
+            nullable: true,
+            methods: ["post", "patch", "delete", "put"],
+          },
+        },
       ],
     },
 
-    "owasp:api2:2019-protection-global-safe": {
+    "owasp:api2:2019-protection-global-unsafe-strict": {
       message: "This operation is not protected by any security scheme.",
-      description: "Check if the operation is protected at operation level.\nOtherwise, check the global `#/security` property.",
+      description:
+        "Check if the operation is protected at operation level.\nOtherwise, check the global `#/security` property.",
       severity: DiagnosticSeverity.Information,
       given: "$",
       then: [
         {
           function: checkSecurity,
           functionOptions: {
-            schemesPath: [
-              'securitySchemes'
-            ],
+            schemesPath: ["securitySchemes"],
+            nullable: false,
+            methods: ["post", "patch", "delete", "put"],
+          },
+        },
+      ],
+    },
+
+    "owasp:api2:2019-protection-global-safe": {
+      message: "This operation is not protected by any security scheme.",
+      description:
+        "Check if the operation is protected at operation level.\nOtherwise, check the global `#/security` property.",
+      severity: DiagnosticSeverity.Information,
+      given: "$",
+      then: [
+        {
+          function: checkSecurity,
+          functionOptions: {
+            schemesPath: ["securitySchemes"],
             nullable: true,
-            methods: [
-              "get",
-              "head"
-            ]
-          }
-        }
-      ]
+            methods: ["get", "head"],
+          },
+        },
+      ],
     },
 
     /**
@@ -346,7 +343,8 @@ export default {
      */
     "owasp:api3:2019-define-error-validation": {
       message: "Missing error validation response of either 400 or 422.",
-      description: "Carefully define schemas for all the API responses, including either 400 or 422 responses which describe errors caused by invalid requests.",
+      description:
+        "Carefully define schemas for all the API responses, including either 400 or 422 responses which describe errors caused by invalid requests.",
       severity: DiagnosticSeverity.Warning,
       given: "$.paths..responses",
       then: [
@@ -354,17 +352,17 @@ export default {
           function: schema,
           functionOptions: {
             schema: {
-              type: 'object',
+              type: "object",
               oneOf: [
                 {
-                  required: ['400'],
+                  required: ["400"],
                 },
                 {
-                  required: ['422'],
+                  required: ["422"],
                 },
               ],
-            }
-          }
+            },
+          },
         },
       ],
     },
@@ -384,7 +382,7 @@ export default {
         },
       ],
     },
-    
+
     /**
      * @author: Jason Harmon <https://github.com/jharmn>
      */
@@ -400,7 +398,7 @@ export default {
         },
       ],
     },
-    
+
     /**
      * API4:2019 — Lack of resources and rate limiting
      *
@@ -424,32 +422,33 @@ export default {
      */
     "owasp:api4:2019-rate-limit": {
       message: "All 2XX and 4XX responses should define rate limiting headers.",
-      description: "Define proper rate limiting to avoid attackers overloading the API. There are many ways to implement rate-limiting, but most of them involve using HTTP headers, and there are two popular ways to do that:\n\nIETF Draft HTTP RateLimit Headers:. https://datatracker.ietf.org/doc/draft-ietf-httpapi-ratelimit-headers/\n\nCustomer headers like X-Rate-Limit-Limit (Twitter: https://developer.twitter.com/en/docs/twitter-api/rate-limits) or X-RateLimit-Limit (GitHub: https://docs.github.com/en/rest/overview/resources-in-the-rest-api)",
+      description:
+        "Define proper rate limiting to avoid attackers overloading the API. There are many ways to implement rate-limiting, but most of them involve using HTTP headers, and there are two popular ways to do that:\n\nIETF Draft HTTP RateLimit Headers:. https://datatracker.ietf.org/doc/draft-ietf-httpapi-ratelimit-headers/\n\nCustomer headers like X-Rate-Limit-Limit (Twitter: https://developer.twitter.com/en/docs/twitter-api/rate-limits) or X-RateLimit-Limit (GitHub: https://docs.github.com/en/rest/overview/resources-in-the-rest-api)",
       severity: DiagnosticSeverity.Error,
       formats: [oas3],
       given: "$.paths[*]..responses[?(@property.match(/^(2|4)/))]",
       then: {
-        field: 'headers',
+        field: "headers",
         function: schema,
         functionOptions: {
           schema: {
-            type: 'object',
+            type: "object",
             oneOf: [
               {
-                required: ['RateLimit-Limit', 'RateLimit-Reset'],
+                required: ["RateLimit-Limit", "RateLimit-Reset"],
               },
               {
-                required: ['X-RateLimit-Limit'],
+                required: ["X-RateLimit-Limit"],
               },
               {
-                required: ['X-Rate-Limit-Limit'],
+                required: ["X-Rate-Limit-Limit"],
               },
             ],
-          }
-        }
+          },
+        },
       },
     },
-    
+
     /**
      * @author: Phil Sturgeon <https://github.com/philsturgeon>
      */
@@ -461,11 +460,11 @@ export default {
       formats: [oas3],
       given: "$..responses[429].headers",
       then: {
-        field: 'Retry-After',
+        field: "Retry-After",
         function: defined,
       },
     },
-    
+
     /**
      * @author: Jason Harmon <https://github.com/jharmn>
      */
@@ -484,11 +483,12 @@ export default {
      * @author: Roberto Polli <https://github.com/ioggstream>
      * @see: https://github.com/italia/api-oas-checker/blob/master/security/array.yml
      */
-     "owasp:api4:2019-array-limit": {
+    "owasp:api4:2019-array-limit": {
       message: "Schema of type array must specify maxItems.",
-      description: "Array size should be limited to mitigate resource exhaustion attacks. This can be done using `maxItems`. You should ensure that the subschema in `items` is constrained too.",
+      description:
+        "Array size should be limited to mitigate resource exhaustion attacks. This can be done using `maxItems`. You should ensure that the subschema in `items` is constrained too.",
       severity: DiagnosticSeverity.Error,
-      given: '#ArrayProperties',
+      given: "#ArrayProperties",
       then: {
         field: "maxItems",
         function: defined,
@@ -500,9 +500,10 @@ export default {
      */
     "owasp:api4:2019-string-limit": {
       message: "Schema of type string must specify maxLength.",
-      description: "String size should be limited to mitigate resource exhaustion attacks. This can be done using `maxLength`.",
+      description:
+        "String size should be limited to mitigate resource exhaustion attacks. This can be done using `maxLength`.",
       severity: DiagnosticSeverity.Error,
-      given: '#StringProperties',
+      given: "#StringProperties",
       then: {
         field: "maxLength",
         function: defined,
@@ -514,24 +515,25 @@ export default {
      */
     "owasp:api4:2019-string-restricted": {
       message: "Schema of type string must specify a format or pattern.",
-      description: "To avoid unexpected values being sent or leaked, ensure that strings have either a format or a RegEx pattern. This can be done using `format` or `pattern`.",
+      description:
+        "To avoid unexpected values being sent or leaked, ensure that strings have either a format or a RegEx pattern. This can be done using `format` or `pattern`.",
       severity: DiagnosticSeverity.Error,
-      given: '#StringProperties',
+      given: "#StringProperties",
       then: {
         function: schema,
         functionOptions: {
           schema: {
-            type: 'object',
+            type: "object",
             oneOf: [
               {
-                required: ['format'],
+                required: ["format"],
               },
               {
-                required: ['pattern'],
+                required: ["pattern"],
               },
             ],
-          }
-        }
+          },
+        },
       },
     },
 
@@ -540,35 +542,37 @@ export default {
      */
     "owasp:api4:2019-integer-limit": {
       message: "Schema of type integer must specify minimum and maximum.",
-      description: "Integers should be limited to mitigate resource exhaustion attacks. This can be done using `minimum` and `maximum`, which can with e.g.: avoiding negative numbers when positive are expected, or reducing unreasonable iterations like doing something 1000 times when 10 is expected.",
+      description:
+        "Integers should be limited to mitigate resource exhaustion attacks. This can be done using `minimum` and `maximum`, which can with e.g.: avoiding negative numbers when positive are expected, or reducing unreasonable iterations like doing something 1000 times when 10 is expected.",
       severity: DiagnosticSeverity.Error,
       formats: [oas3_1],
-      given: '#IntegerProperties',
+      given: "#IntegerProperties",
       then: [
         {
           function: xor,
           functionOptions: {
-            properties: ['minimum', 'exclusiveMinimum']
-          }
+            properties: ["minimum", "exclusiveMinimum"],
+          },
         },
         {
           function: xor,
           functionOptions: {
-            properties: ['maximum', 'exclusiveMaximum']
-          }
+            properties: ["maximum", "exclusiveMaximum"],
+          },
         },
       ],
     },
- 
+
     /**
      * @author: Phil Sturgeon <https://github.com/philsturgeon>
      */
     "owasp:api4:2019-integer-limit-legacy": {
       message: "Schema of type integer must specify minimum and maximum.",
-      description: "Integers should be limited to mitigate resource exhaustion attacks. This can be done using `minimum` and `maximum`, which can with e.g.: avoiding negative numbers when positive are expected, or reducing unreasonable iterations like doing something 1000 times when 10 is expected.",
+      description:
+        "Integers should be limited to mitigate resource exhaustion attacks. This can be done using `minimum` and `maximum`, which can with e.g.: avoiding negative numbers when positive are expected, or reducing unreasonable iterations like doing something 1000 times when 10 is expected.",
       severity: DiagnosticSeverity.Error,
       formats: [oas2, oas3_0],
-      given: '#IntegerProperties',
+      given: "#IntegerProperties",
       then: [
         {
           field: "minimum",
@@ -586,17 +590,18 @@ export default {
      */
     "owasp:api4:2019-integer-format": {
       message: "Schema of type integer must specify format (int32 or int64).",
-      description: "Integers should be limited to mitigate resource exhaustion attacks. Specifying whether int32 or int64 is expected via `format`.",
+      description:
+        "Integers should be limited to mitigate resource exhaustion attacks. Specifying whether int32 or int64 is expected via `format`.",
       severity: DiagnosticSeverity.Error,
-      given: '#IntegerProperties',
+      given: "#IntegerProperties",
       then: [
         {
           field: "format",
           function: defined,
         },
-      ]
+      ],
     },
-    
+
     /**
      * API5:2019 — Broken function level authorization
      *
@@ -626,27 +631,28 @@ export default {
      * - 🟠 Use the readOnly property set to true in object schemas for all properties that can be retrieved through APIs but should never be modified.
      * - ❌ Precisely define the schemas, types, and patterns you will accept in requests at design time and enforce them at runtime.
      */
-    
+
     /**
      * @author: Roberto Polli <https://github.com/ioggstream>
      * @see: https://github.com/italia/api-oas-checker/blob/master/security/objects.yml
      */
     "owasp:api6:2019-no-additionalProperties": {
       message: "Objects should not allow unconstrained additional properties. ",
-      description: "By default JSON Schema allows additional properties, which can potentially lead to mass assignment issues, where unspecified fields are passed to the API without validation. Disable them with `additionalProperties: false` or add `maxProperties`.",
+      description:
+        "By default JSON Schema allows additional properties, which can potentially lead to mass assignment issues, where unspecified fields are passed to the API without validation. Disable them with `additionalProperties: false` or add `maxProperties`.",
       severity: DiagnosticSeverity.Warning,
       formats: [oas3],
       given: '$..[?(@ && @.type=="object" && @.additionalProperties)]',
       then: [
         {
           field: "additionalProperties",
-          function: falsy
+          function: falsy,
         },
         {
           field: "additionalProperties",
-          function: defined
-        }
-      ]
+          function: defined,
+        },
+      ],
     },
 
     /**
@@ -655,16 +661,18 @@ export default {
      */
     "owasp:api6:2019-constrained-additionalProperties": {
       message: "Objects should not allow unconstrained additionalProperties.",
-      description: "By default JSON Schema allows additional properties, which can potentially lead to mass assignment issues, where unspecified fields are passed to the API without validation. Disable them with `additionalProperties: false` or add `maxProperties`",
+      description:
+        "By default JSON Schema allows additional properties, which can potentially lead to mass assignment issues, where unspecified fields are passed to the API without validation. Disable them with `additionalProperties: false` or add `maxProperties`",
       severity: DiagnosticSeverity.Warning,
       formats: [oas3],
-      given: '$..[?(@ && @.type=="object" && @.additionalProperties &&  @.additionalProperties!=true &&  @.additionalProperties!=false )]',
+      given:
+        '$..[?(@ && @.type=="object" && @.additionalProperties &&  @.additionalProperties!=true &&  @.additionalProperties!=false )]',
       then: [
         {
           field: "maxProperties",
-          function: defined
-        }
-      ]
+          function: defined,
+        },
+      ],
     },
 
     /**
@@ -696,8 +704,10 @@ export default {
      * @author: Andrzej <https://github.com/jerzyn>
      */
     "owasp:api7:2019-security-hosts-https-oas2": {
-      message: "All servers defined MUST use https, and no other protocol is permitted.",
-      description: "All server interactions MUST use the https protocol, so the only OpenAPI scheme being used should be `https`.\n\nLearn more about the importance of TLS (over SSL) here: https://cheatsheetseries.owasp.org/cheatsheets/Transport_Layer_Protection_Cheat_Sheet.html",
+      message:
+        "All servers defined MUST use https, and no other protocol is permitted.",
+      description:
+        "All server interactions MUST use the https protocol, so the only OpenAPI scheme being used should be `https`.\n\nLearn more about the importance of TLS (over SSL) here: https://cheatsheetseries.owasp.org/cheatsheets/Transport_Layer_Protection_Cheat_Sheet.html",
       severity: DiagnosticSeverity.Error,
       formats: [oas2],
       given: "$.schemes",
@@ -719,8 +729,10 @@ export default {
      * @author: Andrzej <https://github.com/jerzyn>
      */
     "owasp:api7:2019-security-hosts-https-oas3": {
-      message: "Server URLs MUST begin https://, and no other protocol is permitted.",
-      description: "All server interactions MUST use the https protocol, meaning server URLs should begin `https://`.\n\nLearn more about the importance of TLS (over SSL) here: https://cheatsheetseries.owasp.org/cheatsheets/Transport_Layer_Protection_Cheat_Sheet.html",
+      message:
+        "Server URLs MUST begin https://, and no other protocol is permitted.",
+      description:
+        "All server interactions MUST use the https protocol, meaning server URLs should begin `https://`.\n\nLearn more about the importance of TLS (over SSL) here: https://cheatsheetseries.owasp.org/cheatsheets/Transport_Layer_Protection_Cheat_Sheet.html",
       severity: DiagnosticSeverity.Error,
       formats: [oas3],
       given: "$.servers..url",
@@ -746,6 +758,5 @@ export default {
      * - ❌ Validate, filter, and sanitize all incoming data.
      * - 🟠 Define, limit, and enforce API outputs to prevent data leaks.
      */
-
   },
 };
