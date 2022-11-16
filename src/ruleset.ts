@@ -4,6 +4,7 @@ import { DiagnosticSeverity } from "@stoplight/types";
 import checkSecurity from "./functions/checkSecurity";
 
 export default {
+  formats: [oas2, oas3],
   rules: {
     /**
      * API1:2019 - Broken Object Level Authorization
@@ -100,7 +101,6 @@ export default {
       "API Keys are (usually opaque) strings that\nare passed in headers, cookies or query parameters\nto access APIs.\nThose keys can be eavesdropped, especially when they are stored\nin cookies or passed as URL parameters.\n```\nsecurity:\n- ApiKey: []\npaths:\n  /books: {}\n  /users: {}\nsecuritySchemes:\n  ApiKey:\n    type: apiKey\n    in: cookie\n    name: X-Api-Key\n```",
       severity: DiagnosticSeverity.Error,
       formats: [oas3],
-      recommended: true,
       given: ['$..[securitySchemes][?(@ && @.type=="apiKey")].in'],
       then: [
         {
@@ -119,10 +119,9 @@ export default {
     "owasp:api2:2019-no-credentials-in-url": {
       message: "Security credentials detected in path parameter: {{value}}.",
       description:
-        "URL parameters MUST NOT contain credentials such as apikey, password, or secret. See [RAC_GEN_004](https://docs.italia.it/italia/piano-triennale-ict/lg-modellointeroperabilita-docs/it/bozza/doc/04_Raccomandazioni%20di%20implementazione/04_raccomandazioni-tecniche-generali/01_globali.html?highlight=credenziali#rac-gen-004-non-passare-credenziali-o-dati-riservati-nellurl)",
-        severity: DiagnosticSeverity.Error,
+        "URL parameters MUST NOT contain credentials such as API key, password, or secret. See [RAC_GEN_004](https://docs.italia.it/italia/piano-triennale-ict/lg-modellointeroperabilita-docs/it/bozza/doc/04_Raccomandazioni%20di%20implementazione/04_raccomandazioni-tecniche-generali/01_globali.html?highlight=credenziali#rac-gen-004-non-passare-credenziali-o-dati-riservati-nellurl)",
+      severity: DiagnosticSeverity.Error,
       formats: [oas3],
-      recommended: true,
       given: ["$..parameters[?(@ && @.in && @.in.match(/query|path/))].name"],
       then: [
         {
@@ -234,6 +233,7 @@ export default {
         }
       ],
     },
+
     "owasp:api2:2019-protection-global-safe": {
       message: "This operation is not protected by any security scheme.",
       description: "Check if the operation is protected at operation level.\nOtherwise, check the global `#/security` property.",
@@ -339,19 +339,17 @@ export default {
      *
      * Use case
      * - 🟠 Attackers overload the API by sending more requests than it can handle.
-     * - ❌ Attackers send requests at a rate exceeding the API's processing speed, clogging it up.
-     * - ❌ The size of the requests or some fields in them exceed what the API can process.
+     * - ✅ Attackers send requests at a rate exceeding the API's processing speed, clogging it up.
+     * - ✅ The size of the requests or some fields in them exceed what the API can process.
      * - 🟠 “Zip bombs”, archive files that have been designed so that unpacking them takes excessive amount of resources and overloads the API.
      *
      * How to prevent
      * - ✅ Define proper rate limiting.
-     * - ❌ Limit payload sizes.
+     * - ❌ Limit maximums on request parameter sizes
      * - ❌ Tailor the rate limiting to be match what API methods, clients, or addresses need or should be allowed to get.
      * - ❌ Add checks on compression ratios.
      * - ❌ Define limits for container resources.
      * - 🟠 PS: Look for Zip uploads and warn about setting max file size? how do we know if they did? Demand something in the description?
-     * - 🟠 PS: Limit array sizes
-     * 👆 https://github.com/italia/api-oas-checker/blob/master/security/array.yml
      */
 
     /**
@@ -360,6 +358,7 @@ export default {
      "owasp:api4:2019-rate-limit": {
       message: "All 2XX and 4XX responses should define rate limiting headers.",
       description: "Define proper rate limiting to avoid attackers overloading the API. There are many ways to implement rate-limiting, but most of them involve using HTTP headers, and there are two popular ways to do that:\n\nIETF Draft HTTP RateLimit Headers:. https://datatracker.ietf.org/doc/draft-ietf-httpapi-ratelimit-headers/\n\nCustomer headers like X-Rate-Limit-Limit (Twitter: https://developer.twitter.com/en/docs/twitter-api/rate-limits) or X-RateLimit-Limit (GitHub: https://docs.github.com/en/rest/overview/resources-in-the-rest-api)",
+      severity: DiagnosticSeverity.Error,
       formats: [oas3],
       given: "$.paths[*]..responses[?(@property.match(/^(2|4)/))]",
       then: {
@@ -382,7 +381,6 @@ export default {
           }
         }
       },
-      severity: DiagnosticSeverity.Error,
     },
     
     /**
@@ -392,15 +390,15 @@ export default {
       message: "A 429 response should define a Retry-After header.",
       description:
         "Define proper rate limiting to avoid attackers overloading the API. Part of that involves setting a Retry-After header so well meaning consumers are not polling and potentially exacerbating problems.",
+      severity: DiagnosticSeverity.Error,
       formats: [oas3],
       given: "$..responses[429].headers",
       then: {
         field: 'Retry-After',
         function: defined,
       },
-      severity: DiagnosticSeverity.Error,
     },
-
+    
     /**
      * @author: Jason Harmon <https://github.com/jharmn>
      */
@@ -417,6 +415,40 @@ export default {
       ],
     },
 
+    /**
+     * @author: Roberto Polli <https://github.com/ioggstream>
+     * @see: https://github.com/italia/api-oas-checker/blob/master/security/array.yml
+     */
+     "owasp:api4:2019-array-limit": {
+      message: "Schema of type array must specify maxItems.",
+      description: "Array size should be limited to mitigate resource exhaustion attacks. This can be done using `maxItems`. You should ensure that the subschema in `items` is constrained too.",
+      severity: DiagnosticSeverity.Error,
+      given: '$..[?(@ && @.type=="array")]',
+      then: [
+        {
+          field: "maxItems",
+          function: defined,
+        },
+      ]
+    },
+
+    /**
+     * @author: Roberto Polli <https://github.com/ioggstream>
+     * @see: https://github.com/italia/api-oas-checker/blob/master/security/array.yml
+     */
+    "owasp:api4:2019-string-limit": {
+      message: "Schema of type string must specify maxLength.",
+      description: "String size should be limited to mitigate resource exhaustion attacks. This can be done using `maxLength`.",
+      severity: DiagnosticSeverity.Error,
+      given: '$..[?(@ && @.type=="string")]',
+      then: [
+        {
+          field: "maxLength",
+          function: defined,
+        },
+      ]
+    },
+    
     /**
      * API5:2019 — Broken function level authorization
      *
@@ -452,15 +484,11 @@ export default {
      * @see: https://github.com/italia/api-oas-checker/blob/master/security/objects.yml
      */
     "owasp:api6:2019-no-additionalProperties": {
-      description: "By default JSON Schema allows additional properties, which can potentially lead to mass assignment issues, where unspecified fields are passed to the API without validation.",
-      message: "Objects should not allow unconstrained additionalProperties. Disable them with `additionalProperties: false` or add `maxProperties`.",
-      formats: [
-        oas3
-      ],
+      message: "Objects should not allow unconstrained additional properties. ",
+      description: "By default JSON Schema allows additional properties, which can potentially lead to mass assignment issues, where unspecified fields are passed to the API without validation. Disable them with `additionalProperties: false` or add `maxProperties`.",
       severity: DiagnosticSeverity.Warning,
-      given: [
-        "$..[?(@.type==\"object\" && @.additionalProperties)]"
-      ],
+      formats: [oas3],
+      given: '$..[?(@ && @.type=="object" && @.additionalProperties)]',
       then: [
         {
           field: "additionalProperties",
@@ -478,15 +506,11 @@ export default {
      * @see: https://github.com/italia/api-oas-checker/blob/master/security/objects.yml
      */
     "owasp:api6:2019-constrained-additionalProperties": {
-      description: "By default JSON Schema allows additional properties, which can potentially lead to mass assignment issues, where unspecified fields are passed to the API without validation.",
-      message: "Objects should not allow unconstrained additionalProperties. Disable them with `additionalProperties: false` or add `maxProperties`.",
-      formats: [
-        oas3
-      ],
+      message: "Objects should not allow unconstrained additionalProperties.",
+      description: "By default JSON Schema allows additional properties, which can potentially lead to mass assignment issues, where unspecified fields are passed to the API without validation. Disable them with `additionalProperties: false` or add `maxProperties`",
       severity: DiagnosticSeverity.Warning,
-      given: [
-        "$..[?(@.type==\"object\" && @.additionalProperties &&  @.additionalProperties!=true &&  @.additionalProperties!=false )]"
-      ],
+      formats: [oas3],
+      given: '$..[?(@ && @.type=="object" && @.additionalProperties &&  @.additionalProperties!=true &&  @.additionalProperties!=false )]',
       then: [
         {
           field: "maxProperties",
@@ -526,6 +550,8 @@ export default {
     "owasp:api7:2019-security-hosts-https-oas2": {
       message: "All servers defined MUST use https, and no other protocol is permitted.",
       description: "All server interactions MUST use the https protocol, so the only OpenAPI scheme being used should be `https`.\n\nLearn more about the importance of TLS (over SSL) here: https://cheatsheetseries.owasp.org/cheatsheets/Transport_Layer_Protection_Cheat_Sheet.html",
+      severity: DiagnosticSeverity.Error,
+      formats: [oas2],
       given: "$.schemes",
       then: {
         function: schema,
@@ -539,8 +565,6 @@ export default {
           },
         },
       },
-      severity: DiagnosticSeverity.Error,
-      formats: [oas2],
     },
 
     /**
@@ -549,6 +573,8 @@ export default {
     "owasp:api7:2019-security-hosts-https-oas3": {
       message: "Server URLs MUST begin https://, and no other protocol is permitted.",
       description: "All server interactions MUST use the https protocol, meaning server URLs should begin `https://`.\n\nLearn more about the importance of TLS (over SSL) here: https://cheatsheetseries.owasp.org/cheatsheets/Transport_Layer_Protection_Cheat_Sheet.html",
+      severity: DiagnosticSeverity.Error,
+      formats: [oas3],
       given: "$.servers..url",
       then: {
         function: pattern,
@@ -556,8 +582,6 @@ export default {
           match: "/^https:/",
         },
       },
-      formats: [oas3],
-      severity: DiagnosticSeverity.Error,
     },
 
     /**
