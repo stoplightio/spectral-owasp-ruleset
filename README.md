@@ -6,13 +6,12 @@ Scan an [OpenAPI](https://spec.openapis.org/oas/v3.1.0) document to detect secur
 
 ## Installation
 
-``` bash
+```bash
 npm install --save -D @stoplight/spectral-owasp-ruleset
 npm install --save -D @stoplight/spectral-cli
 ```
 
 ## Usage
-
 
 Create a local ruleset that extends the ruleset. In its most basic form this just tells Spectral what ruleset you want to use, but it will allow you to customise things, add your own rules, turn bits off if its causing trouble.
 
@@ -65,7 +64,7 @@ There are [a bunch of other rulesets](https://github.com/stoplightio/spectral-ru
 
 This repository is licensed under the MIT license.
 
-## 🌲 Sponsor 
+## 🌲 Sponsor
 
 If you would like to thank us for creating Spectral, we ask that you [**buy the world a tree**][stoplight_forest].
 

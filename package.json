@@ -49,13 +49,22 @@
     "tsup": "^6.2.3"
   },
   "tsup": {
-    "entry": ["src/ruleset.ts"],
+    "entry": [
+      "src/ruleset.ts"
+    ],
     "clean": true,
     "dts": true,
-    "format": ["cjs", "esm"],
+    "format": [
+      "cjs",
+      "esm"
+    ],
     "sourcemap": true,
-    "noExternal": ["@stoplight/types"],
-    "external": ["@stoplight/spectral-core"],
+    "noExternal": [
+      "@stoplight/types"
+    ],
+    "external": [
+      "@stoplight/spectral-core"
+    ],
     "footer": {
       "js": "module.exports = module.exports.default;"
     }

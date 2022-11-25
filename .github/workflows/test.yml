@@ -4,7 +4,7 @@ on:
   pull_request:
     # Only run tests when relevant files are changing
     paths-ignore:
-      - '**.md'
+      - "**.md"
 
 jobs:
   test:
