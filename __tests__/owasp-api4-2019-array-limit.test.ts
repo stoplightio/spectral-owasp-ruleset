@@ -27,7 +27,33 @@ testRule("owasp:api4:2019-array-limit", [
           Foo: {
             type: "array",
             maxItems: 99,
+          }
+        },
+      },
+    },
+    errors: [],
+  },
+
+
+  {
+    name: "valid case: oas3.1",
+    document: {
+      openapi: "3.1.0",
+      info: { version: "1.0" },
+      components: {
+        schemas: {
+          type: {
+            type: "string",
+            maxLength: 99,
           },
+          User: {
+            type: 'object',
+            properties: {
+              type: {
+                enum: ['user', 'admin'],
+              },
+            }
+          }
         },
       },
     },
