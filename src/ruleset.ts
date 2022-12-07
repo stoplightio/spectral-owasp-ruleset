@@ -30,7 +30,7 @@ export default {
             '$..[?(@ && @.type=="array")]',
 
             // also check for type: ['array', ...]
-            '$..[?(@ && @.type && !@.type.match && @.type.includes("array"))]',
+            '$..[?(@ && @.type && @.type.constructor.name === "Array" && @.type.includes("array"))]',
           ],
         },
       ],
@@ -51,7 +51,7 @@ export default {
             '$..[?(@ && @.type=="integer")]',
 
             // also check for type: ['integer', ...]
-            '$..[?(@ && @.type && !@.type.match && @.type.includes("integer"))]',
+            '$..[?(@ && @.type && @.type.constructor.name === "Array" && @.type.includes("integer"))]',
           ],
         },
       ],
@@ -72,7 +72,7 @@ export default {
             '$..[?(@ && @.type=="string")]',
 
             // also check for type: ['string', ...]
-            '$..[?(@ && @.type && !@.type.match && @.type.includes("string"))]',
+            '$..[?(@ && @.type && @.type.constructor.name === "Array" && @.type.includes("string"))]',
           ],
         },
       ],
