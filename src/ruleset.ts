@@ -677,12 +677,13 @@ export default {
      */
     "owasp:api6:2019-no-additionalProperties": {
       message:
-        "If the additionalProperties keyword is used it must be set to false.",
+        "additionalProperties is disabled by default in OAS3.0, and should not be enabled.",
       description:
-        "By default JSON Schema allows additional properties, which can potentially lead to mass assignment issues, where unspecified fields are passed to the API without validation. Disable them with `additionalProperties: false` or add `maxProperties`.",
+        "OpenAPI v3.0 allows additional properties but is disabled by default. This feature should not be enabled as it can potentially lead to mass assignment issues, where unspecified fields are passed to the API without validation. Disable them with `additionalProperties: false` or add `maxProperties`.",
       severity: DiagnosticSeverity.Warning,
-      formats: [oas3],
-      given: '$..[?(@ && @.type=="object" && @.additionalProperties)]',
+      formats: [oas3_0],
+      given:
+        '$..[?(@ && @.type=="object" && @.additionalProperties && @.additionalProperties.type != "object" )]',
       then: [
         {
           field: "additionalProperties",
@@ -698,15 +699,30 @@ export default {
     "owasp:api6:2019-constrained-additionalProperties": {
       message: "Objects should not allow unconstrained additionalProperties.",
       description:
-        "By default JSON Schema allows additional properties, which can potentially lead to mass assignment issues, where unspecified fields are passed to the API without validation. Disable them with `additionalProperties: false` or add `maxProperties`",
+        "By default OpenAPI v3.1 enables additionalProperties. This feature should be turned off as it can potentially lead to mass assignment issues, where unspecified fields are passed to the API without validation. Alternatively it could be constrained with `maxProperties`",
       severity: DiagnosticSeverity.Warning,
-      formats: [oas3],
-      given:
-        '$..[?(@ && @.type=="object" && @.additionalProperties &&  @.additionalProperties!=true &&  @.additionalProperties!=false )]',
+      formats: [oas3_1],
+      given: '$..[?(@ && @.type=="object")]',
       then: [
         {
-          field: "maxProperties",
-          function: defined,
+          function: schema,
+          schema: {
+            oneOf: [
+              // either additionalProperties is disabled
+              {
+                additionalProperties: {
+                  const: false,
+                },
+              },
+              // or it is constrained with maxProperties
+              {
+                additionalProperties: {
+                  type: "object",
+                },
+                required: ["maxProperties"],
+              },
+            ],
+          },
         },
       ],
     },
