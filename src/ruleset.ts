@@ -269,7 +269,7 @@ export default {
     "owasp:api2:2019-protection-global-unsafe": {
       message: "This operation is not protected by any security scheme.",
       description:
-        "Your API should be protected by a `security` rule either at\nglobal or operation level.\nAll operations should be protected especially when they\nnot safe (methods that do not alter the state of the server) \nHTTP methods like `POST`, `PUT`, `PATCH` and `DELETE`.\nThis is done with one or more non-empty `security` rules.\n\nSecurity rules are defined in the `securityScheme` section.\n\nAn example of a security rule applied at global level.\n\n```\nsecurity:\n- BasicAuth: []\npaths:\n  /books: {}\n  /users: {}\nsecuritySchemes:\n  BasicAuth:\n    scheme: http\n    type: basic\n```\n\nAn example of a security rule applied at operation level, which\neventually overrides the global one\n\n```\npaths:\n  /books:\n    post:\n      security:\n      - AccessToken: []\nsecuritySchemes:\n  BasicAuth:\n    scheme: http\n    type: basic\n  AccessToken:\n    scheme: http\n    type: bearer\n    bearerFormat: JWT\n```",
+        "Your API should be protected by a `security` rule either at global or operation level. All operations should be protected especially when they\nnot safe (methods that do not alter the state of the server) \nHTTP methods like `POST`, `PUT`, `PATCH` and `DELETE`.\nThis is done with one or more non-empty `security` rules.\n\nSecurity rules are defined in the `securityScheme` section.",
       severity: DiagnosticSeverity.Error,
       given: "$",
       then: [
@@ -278,7 +278,7 @@ export default {
           functionOptions: {
             schemesPath: ["securitySchemes"],
             nullable: true,
-            methods: ["post", "patch", "delete", "put"],
+            methods: ["post", "put", "patch", "delete"],
           },
         },
       ],
@@ -371,13 +371,18 @@ export default {
      * @author: Jason Harmon <https://github.com/jharmn>
      */
     "owasp:api3:2019-define-error-responses-401": {
-      message: "{{description}}. Missing {{property}}",
-      description: "401 response should be defined.",
+      message: "Operation is missing {{property}}.",
+      description:
+        "OWASP API Security recommends defining schemas for all responses, even errors. The 401 describes what happens when a request is unauthorized, so its important to define this not just for documentation, but to empower contract testing to make sure the proper JSON structure is being returned instead of leaking implementation details in backtraces.",
       severity: DiagnosticSeverity.Warning,
       given: "$.paths..responses",
       then: [
         {
           field: "401",
+          function: truthy,
+        },
+        {
+          field: "401.content",
           function: truthy,
         },
       ],
