@@ -392,13 +392,18 @@ export default {
      * @author: Jason Harmon <https://github.com/jharmn>
      */
     "owasp:api3:2019-define-error-responses-500": {
-      message: "{{description}}. Missing {{property}}",
-      description: "500 response should be defined.",
+      message: "Operation is missing {{property}}.",
+      description:
+        "OWASP API Security recommends defining schemas for all responses, even errors. The 500 describes what happens when a request fails with an internal server error, so its important to define this not just for documentation, but to empower contract testing to make sure the proper JSON structure is being returned instead of leaking implementation details in backtraces.",
       severity: DiagnosticSeverity.Warning,
       given: "$.paths..responses",
       then: [
         {
           field: "500",
+          function: truthy,
+        },
+        {
+          field: "500.content",
           function: truthy,
         },
       ],
