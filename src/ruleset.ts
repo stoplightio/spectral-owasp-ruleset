@@ -622,14 +622,12 @@ export default {
     /**
      * API5:2019 — Broken function level authorization
      *
+     * - Don’t assume that an API endpoint is regular or administrative only based on the URL path.
      * - Do not rely on the client to enforce admin access.
      * - Deny all access by default.
-     * - Only allow operations to users belonging to the appropriate group or role.
-     * - Properly design and test authorization.
      */
 
-    // 'owasp:api5:2019-broken-function-level-authorization':
-    // 'https://apisecurity.io/encyclopedia/content/owasp/api5-broken-function-level-authorization',
+    // TODO: Check for /admin/ in the path and see if its the same securityScheme as non admin paths.
 
     /**
      * API6:2019 — Mass assignment
@@ -654,7 +652,8 @@ export default {
      * @see: https://github.com/italia/api-oas-checker/blob/master/security/objects.yml
      */
     "owasp:api6:2019-no-additionalProperties": {
-      message: "Objects should not allow unconstrained additional properties. ",
+      message:
+        "If the additionalProperties keyword is used it must be set to false.",
       description:
         "By default JSON Schema allows additional properties, which can potentially lead to mass assignment issues, where unspecified fields are passed to the API without validation. Disable them with `additionalProperties: false` or add `maxProperties`.",
       severity: DiagnosticSeverity.Warning,
@@ -664,10 +663,6 @@ export default {
         {
           field: "additionalProperties",
           function: falsy,
-        },
-        {
-          field: "additionalProperties",
-          function: defined,
         },
       ],
     },
