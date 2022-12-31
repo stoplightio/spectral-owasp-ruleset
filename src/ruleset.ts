@@ -479,14 +479,21 @@ export default {
      * @author: Jason Harmon <https://github.com/jharmn>
      */
     "owasp:api4:2019-rate-limit-responses-429": {
-      description: "429 response should be defined.",
-      message: "{{description}}. Missing {{property}}",
+      message: "Operation is missing rate limiting response in {{property}}.",
+      description:
+        "OWASP API Security recommends defining schemas for all responses, even errors. A HTTP 429 response signals the API client is making too many requests, and will supply information about when to retry so that the client can back off calmly without everything breaking. Defining this response is important not just for documentation, but to empower contract testing to make sure the proper JSON structure is being returned instead of leaking implementation details in backtraces. It also ensures your API/framework/gateway actually has rate limiting set up.",
       severity: DiagnosticSeverity.Warning,
       given: "$.paths..responses",
-      then: {
-        field: "429",
-        function: truthy,
-      },
+      then: [
+        {
+          field: "429",
+          function: truthy,
+        },
+        {
+          field: "429.content",
+          function: truthy,
+        },
+      ],
     },
 
     /**
