@@ -516,14 +516,29 @@ export default {
      * @author: Phil Sturgeon <https://github.com/philsturgeon>
      */
     "owasp:api4:2019-string-limit": {
-      message: "Schema of type string must specify maxLength.",
+      message: "Schema of type string must specify maxLength, enum, or const.",
       description:
-        "String size should be limited to mitigate resource exhaustion attacks. This can be done using `maxLength`.",
+        "String size should be limited to mitigate resource exhaustion attacks. This can be done using `maxLength`, `enum` or `const`.",
       severity: DiagnosticSeverity.Error,
       given: "#StringProperties",
       then: {
-        field: "maxLength",
-        function: defined,
+        function: schema,
+        functionOptions: {
+          schema: {
+            type: "object",
+            oneOf: [
+              {
+                required: ["maxLength"],
+              },
+              {
+                required: ["enum"],
+              },
+              {
+                required: ["const"],
+              },
+            ],
+          },
+        },
       },
     },
 
@@ -531,9 +546,9 @@ export default {
      * @author: Phil Sturgeon <https://github.com/philsturgeon>
      */
     "owasp:api4:2019-string-restricted": {
-      message: "Schema of type string must specify a format or pattern.",
+      message: "Schema of type string must specify a format, pattern, enum, or const.",
       description:
-        "To avoid unexpected values being sent or leaked, ensure that strings have either a format or a RegEx pattern. This can be done using `format` or `pattern`.",
+        "To avoid unexpected values being sent or leaked, ensure that strings have either a format or a RegEx pattern. This can be done using `format`, `pattern`, `enum` or `const`.",
       severity: DiagnosticSeverity.Error,
       given: "#StringProperties",
       then: {

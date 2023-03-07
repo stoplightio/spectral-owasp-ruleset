@@ -109,7 +109,7 @@ testRule("owasp:api4:2019-string-restricted", [
         schemas: {
           Foo: {
             type: "string",
-            enum: [ "a", "b", "c" ]
+            enum: ["a", "b", "c"],
           },
         },
       },
@@ -126,7 +126,7 @@ testRule("owasp:api4:2019-string-restricted", [
         schemas: {
           Foo: {
             type: "string",
-            const: "CONSTANT"
+            const: "CONSTANT",
           },
         },
       },
@@ -147,7 +147,8 @@ testRule("owasp:api4:2019-string-restricted", [
     },
     errors: [
       {
-        message: "Schema of type string must specify a format or pattern.",
+        message:
+          "Schema of type string must specify a format, pattern, enum, or const.",
         path: ["definitions", "Foo"],
         severity: DiagnosticSeverity.Error,
       },
@@ -173,12 +174,14 @@ testRule("owasp:api4:2019-string-restricted", [
     },
     errors: [
       {
-        message: "Schema of type string must specify a format or pattern.",
+        message:
+          "Schema of type string must specify a format, pattern, enum, or const.",
         path: ["components", "schemas", "Foo"],
         severity: DiagnosticSeverity.Error,
       },
       {
-        message: "Schema of type string must specify a format or pattern.",
+        message:
+          "Schema of type string must specify a format, pattern, enum, or const.",
         path: ["components", "schemas", "Bar"],
         severity: DiagnosticSeverity.Error,
       },
