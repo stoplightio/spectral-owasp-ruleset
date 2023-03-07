@@ -548,6 +548,12 @@ export default {
               {
                 required: ["pattern"],
               },
+              {
+                required: ["enum"],
+              },
+              {
+                required: ["const"],
+              },
             ],
           },
         },
