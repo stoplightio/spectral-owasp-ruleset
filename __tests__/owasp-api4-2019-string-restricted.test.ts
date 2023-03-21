@@ -101,6 +101,40 @@ testRule("owasp:api4:2019-string-restricted", [
   },
 
   {
+    name: "valid case: enum (oas3)",
+    document: {
+      openapi: "3.0.0",
+      info: { version: "1.0" },
+      components: {
+        schemas: {
+          Foo: {
+            type: "string",
+            enum: ["a", "b", "c"],
+          },
+        },
+      },
+    },
+    errors: [],
+  },
+
+  {
+    name: "valid case: const (oas3.1)",
+    document: {
+      openapi: "3.1.0",
+      info: { version: "1.0" },
+      components: {
+        schemas: {
+          Foo: {
+            type: "string",
+            const: "CONSTANT",
+          },
+        },
+      },
+    },
+    errors: [],
+  },
+
+  {
     name: "invalid case: neither format or pattern (oas2)",
     document: {
       swagger: "2.0",
@@ -113,7 +147,8 @@ testRule("owasp:api4:2019-string-restricted", [
     },
     errors: [
       {
-        message: "Schema of type string must specify a format or pattern.",
+        message:
+          "Schema of type string must specify a format, pattern, enum, or const.",
         path: ["definitions", "Foo"],
         severity: DiagnosticSeverity.Error,
       },
@@ -139,12 +174,14 @@ testRule("owasp:api4:2019-string-restricted", [
     },
     errors: [
       {
-        message: "Schema of type string must specify a format or pattern.",
+        message:
+          "Schema of type string must specify a format, pattern, enum, or const.",
         path: ["components", "schemas", "Foo"],
         severity: DiagnosticSeverity.Error,
       },
       {
-        message: "Schema of type string must specify a format or pattern.",
+        message:
+          "Schema of type string must specify a format, pattern, enum, or const.",
         path: ["components", "schemas", "Bar"],
         severity: DiagnosticSeverity.Error,
       },

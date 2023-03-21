@@ -51,6 +51,41 @@ testRule("owasp:api4:2019-string-limit", [
     errors: [],
   },
 
+
+  {
+    name: "valid case: oas3.0",
+    document: {
+      openapi: "3.0.0",
+      info: { version: "1.0" },
+      components: {
+        schemas: {
+          Foo: {
+            type: "string",
+            enum: [ "a", "b", "c" ]
+          },
+        },
+      },
+    },
+    errors: [],
+  },
+
+  {
+    name: "valid case: oas3.1",
+    document: {
+      openapi: "3.1.0",
+      info: { version: "1.0" },
+      components: {
+        schemas: {
+          Foo: {
+            type: "string",
+            const: "constant"
+          },
+        },
+      },
+    },
+    errors: [],
+  },
+
   {
     name: "invalid case: oas2 missing maxLength",
     document: {
@@ -64,7 +99,7 @@ testRule("owasp:api4:2019-string-limit", [
     },
     errors: [
       {
-        message: "Schema of type string must specify maxLength.",
+        message: "Schema of type string must specify maxLength, enum, or const.",
         path: ["definitions", "Foo"],
         severity: DiagnosticSeverity.Error,
       },
@@ -86,7 +121,7 @@ testRule("owasp:api4:2019-string-limit", [
     },
     errors: [
       {
-        message: "Schema of type string must specify maxLength.",
+        message: "Schema of type string must specify maxLength, enum, or const.",
         path: ["components", "schemas", "Foo"],
         severity: DiagnosticSeverity.Error,
       },
@@ -107,7 +142,7 @@ testRule("owasp:api4:2019-string-limit", [
     },
     errors: [
       {
-        message: "Schema of type string must specify maxLength.",
+        message: "Schema of type string must specify maxLength, enum, or const.",
         path: ["components", "schemas", "Foo"],
         severity: DiagnosticSeverity.Error,
       },
