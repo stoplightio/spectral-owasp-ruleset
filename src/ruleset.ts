@@ -244,8 +244,8 @@ export default {
         'JSON Web Tokens RFC7519 is a compact, URL-safe, means of representing claims to be transferred between two parties. JWT can be enclosed in encrypted or signed tokens like JWS and JWE.\n\nThe [JOSE IANA registry](https://www.iana.org/assignments/jose/jose.xhtml) provides algorithms information.\n\nRFC8725 describes common pitfalls in the JWx specifications and in\ntheir implementations, such as:\n- the ability to ignore algorithms, eg. `{"alg": "none"}`;\n- using insecure algorithms like `RSASSA-PKCS1-v1_5` eg. `{"alg": "RS256"}`.\nAn API using JWT should explicit in the `description`\nthat the implementation conforms to RFC8725.\n```\ncomponents:\n  securitySchemes:\n    JWTBearer:\n      type: http\n      scheme: bearer\n      bearerFormat: JWT\n      description: |-\n        A bearer token in the format of a JWS and conformato\n        to the specifications included in RFC8725.\n```',
       severity: DiagnosticSeverity.Error,
       given: [
-        '$..[securitySchemes][?(@.type=="oauth2")]',
-        '$..[securitySchemes][?(@.bearerFormat=="jwt" || @.bearerFormat=="JWT")]',
+        '$.components.securitySchemes[?(@ && @.type=="oauth2")]',
+        '$.components.securitySchemes[?(@ && (@.bearerFormat=="jwt" || @.bearerFormat=="JWT"))]',
       ],
       then: [
         {
