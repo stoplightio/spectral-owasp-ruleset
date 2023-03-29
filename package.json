@@ -48,26 +48,5 @@
     "ts-jest": "^28.0",
     "tsup": "^6.5.0",
     "typescript": "^4.9.5"
-  },
-  "tsup": {
-    "entry": [
-      "src/ruleset.ts"
-    ],
-    "clean": true,
-    "dts": true,
-    "format": [
-      "cjs",
-      "esm"
-    ],
-    "sourcemap": true,
-    "noExternal": [
-      "@stoplight/types"
-    ],
-    "external": [
-      "@stoplight/spectral-core"
-    ],
-    "footer": {
-      "js": "module.exports = module.exports.default;"
-    }
   }
 }
