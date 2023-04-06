@@ -551,7 +551,7 @@ export default {
     "owasp:api4:2019-string-restricted": {
       message: "Schema of type string must specify a format, pattern, enum, or const.",
       description:
-        "To avoid unexpected values being sent or leaked, ensure that strings have either a format or a RegEx pattern. This can be done using `format`, `pattern`, `enum` or `const`.",
+        "To avoid unexpected values being sent or leaked, ensure that strings have either a `format`, RegEx `pattern`, `enum`, or `const`.",
       severity: DiagnosticSeverity.Error,
       given: "#StringProperties",
       then: {
@@ -559,7 +559,7 @@ export default {
         functionOptions: {
           schema: {
             type: "object",
-            oneOf: [
+            anyOf: [
               {
                 required: ["format"],
               },
