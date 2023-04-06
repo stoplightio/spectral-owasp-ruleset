@@ -342,9 +342,9 @@ export default {
      * @author: Jason Harmon <https://github.com/jharmn>
      */
     "owasp:api3:2019-define-error-validation": {
-      message: "Missing error validation response of either 400 or 422.",
+      message: "Missing error response of either 400, 422 or 4XX.",
       description:
-        "Carefully define schemas for all the API responses, including either 400 or 422 responses which describe errors caused by invalid requests.",
+        "Carefully define schemas for all the API responses, including either 400, 422 or 4XX responses which describe errors caused by invalid requests.",
       severity: DiagnosticSeverity.Warning,
       given: "$.paths..responses",
       then: [
@@ -353,12 +353,15 @@ export default {
           functionOptions: {
             schema: {
               type: "object",
-              oneOf: [
+              anyOf: [
                 {
                   required: ["400"],
                 },
                 {
                   required: ["422"],
+                },
+                {
+                  required: ["4XX"],
                 },
               ],
             },

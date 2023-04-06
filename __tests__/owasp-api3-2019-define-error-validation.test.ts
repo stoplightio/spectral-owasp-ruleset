@@ -43,6 +43,49 @@ testRule("owasp:api3:2019-define-error-validation", [
   },
 
   {
+    name: "valid case:400 and 422",
+    document: {
+      openapi: "3.1.0",
+      info: { version: "1.0" },
+      paths: {
+        "/": {
+          get: {
+            responses: {
+              "400": {
+                description: "classic validation fail",
+              },
+              "422": {
+                description: "classic validation fail",
+              },
+            },
+          },
+        },
+      },
+    },
+    errors: [],
+  },
+
+  {
+    name: "valid case:4XX",
+    document: {
+      openapi: "3.1.0",
+      info: { version: "1.0" },
+      paths: {
+        "/": {
+          get: {
+            responses: {
+              "4XX": {
+                description: "classic validation fail",
+              },
+            },
+          },
+        },
+      },
+    },
+    errors: [],
+  },
+
+  {
     name: "invalid case",
     document: {
       openapi: "3.1.0",
@@ -61,7 +104,7 @@ testRule("owasp:api3:2019-define-error-validation", [
     },
     errors: [
       {
-        message: "Missing error validation response of either 400 or 422.",
+        message: "Missing error response of either 400, 422 or 4XX.",
         path: ["paths", "/", "get", "responses"],
         severity: DiagnosticSeverity.Warning,
       },
