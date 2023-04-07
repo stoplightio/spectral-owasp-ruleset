@@ -529,7 +529,7 @@ export default {
         functionOptions: {
           schema: {
             type: "object",
-            oneOf: [
+            anyOf: [
               {
                 required: ["maxLength"],
               },
