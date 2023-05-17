@@ -50,7 +50,7 @@ testRule("owasp:api4:2019-string-restricted", [
   },
 
   {
-    name: "valid case: format (oas3)",
+    name: "valid case: pattern (oas3)",
     document: {
       openapi: "3.0.0",
       info: { version: "1.0" },
@@ -110,6 +110,25 @@ testRule("owasp:api4:2019-string-restricted", [
           Foo: {
             type: "string",
             enum: ["a", "b", "c"],
+          },
+        },
+      },
+    },
+    errors: [],
+  },
+
+  {
+    name: "valid case: format + pattern (oas3.1)",
+    document: {
+      openapi: "3.1.0",
+      info: { version: "1.0" },
+      components: {
+        schemas: {
+          foo: {
+            type: "string",
+            format: "hex",
+            pattern: "^[0-9a-fA-F]+$",
+            maxLength: 16
           },
         },
       },
