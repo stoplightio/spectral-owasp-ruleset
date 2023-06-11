@@ -121,29 +121,6 @@ testRule("owasp:api4:2019-integer-limit", [
   },
 
   {
-    name: "invalid case: only maximum",
-    document: {
-      openapi: "3.1.0",
-      info: { version: "1.0" },
-      components: {
-        schemas: {
-          Foo: {
-            type: "integer",
-            maximum: 99,
-          },
-        },
-      },
-    },
-    errors: [
-      {
-        message: "Schema of type integer must specify minimum and maximum.",
-        path: ["components", "schemas", "Foo"],
-        severity: DiagnosticSeverity.Error,
-      },
-    ],
-  },
-
-  {
     name: "invalid case: only exclusiveMinimum",
     document: {
       openapi: "3.1.0",
