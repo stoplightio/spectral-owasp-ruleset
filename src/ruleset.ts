@@ -692,7 +692,7 @@ export default {
     },
 
     /**
-     * @author: David Biesack <https://github.com/davidbiesack>,
+     * @author: David Biesack <https://github.com/DavidBiesack>,
      * derived from owasp:api6:2019-no-additionalProperties
      * @see: https://github.com/italia/api-oas-checker/blob/master/security/objects.yml
      */
@@ -733,7 +733,7 @@ export default {
     },
 
     /**
-     * @author: David Biesack <https://github.com/davidbiesack>,
+     * @author: David Biesack <https://github.com/DavidBiesack>,
      * derived from owasp:api6:2019-constrained-additionalProperties
      * @see: https://github.com/italia/api-oas-checker/blob/master/security/objects.yml
      */
