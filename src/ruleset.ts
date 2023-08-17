@@ -702,7 +702,7 @@ export default {
       description:
         "By default JSON Schema allows unevaluated properties, which can potentially lead to mass assignment issues, where unspecified fields are passed to the API without validation. Disable them with `unevaluatedProperties: false` or add `maxProperties`.",
       severity: DiagnosticSeverity.Warning,
-      formats: [oas3],
+      formats: [oas3_1],
       given: '$..[?(@ && @.type=="object" && @.unevaluatedProperties)]',
       then: [
         {
@@ -742,7 +742,7 @@ export default {
       description:
         "By default JSON Schema allows unevaluated properties, which can potentially lead to mass assignment issues, where unspecified fields are passed to the API without validation. Disable them with `unevaluatedProperties: false` or add `maxProperties`",
       severity: DiagnosticSeverity.Warning,
-      formats: [oas3],
+      formats: [oas3_1],
       given:
         '$..[?(@ && @.type=="object" && @.unevaluatedProperties &&  @.unevaluatedProperties!=true &&  @.unevaluatedProperties!=false )]',
       then: [
