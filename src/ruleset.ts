@@ -692,6 +692,27 @@ export default {
     },
 
     /**
+     * @author: David Biesack <https://github.com/davidbiesack>,
+     * derived from owasp:api6:2019-no-additionalProperties
+     * @see: https://github.com/italia/api-oas-checker/blob/master/security/objects.yml
+     */
+    "owasp:api6:2019-no-unevaluatedProperties": {
+      message:
+        "If the unevaluatedProperties keyword is used it must be set to false.",
+      description:
+        "By default JSON Schema allows unevaluated properties, which can potentially lead to mass assignment issues, where unspecified fields are passed to the API without validation. Disable them with `unevaluatedProperties: false` or add `maxProperties`.",
+      severity: DiagnosticSeverity.Warning,
+      formats: [oas3],
+      given: '$..[?(@ && @.type=="object" && @.unevaluatedProperties)]',
+      then: [
+        {
+          field: "unevaluatedProperties",
+          function: falsy,
+        },
+      ],
+    },
+
+    /**
      * @author: Roberto Polli <https://github.com/ioggstream>
      * @see: https://github.com/italia/api-oas-checker/blob/master/security/objects.yml
      */
@@ -703,6 +724,27 @@ export default {
       formats: [oas3],
       given:
         '$..[?(@ && @.type=="object" && @.additionalProperties &&  @.additionalProperties!=true &&  @.additionalProperties!=false )]',
+      then: [
+        {
+          field: "maxProperties",
+          function: defined,
+        },
+      ],
+    },
+
+    /**
+     * @author: David Biesack <https://github.com/davidbiesack>,
+     * derived from owasp:api6:2019-constrained-additionalProperties
+     * @see: https://github.com/italia/api-oas-checker/blob/master/security/objects.yml
+     */
+    "owasp:api6:2019-constrained-unevaluatedProperties": {
+      message: "Objects should not allow unconstrained unevaluatedProperties.",
+      description:
+        "By default JSON Schema allows unevaluated properties, which can potentially lead to mass assignment issues, where unspecified fields are passed to the API without validation. Disable them with `unevaluatedProperties: false` or add `maxProperties`",
+      severity: DiagnosticSeverity.Warning,
+      formats: [oas3],
+      given:
+        '$..[?(@ && @.type=="object" && @.unevaluatedProperties &&  @.unevaluatedProperties!=true &&  @.unevaluatedProperties!=false )]',
       then: [
         {
           field: "maxProperties",
