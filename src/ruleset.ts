@@ -677,16 +677,16 @@ export default {
      */
     "owasp:api6:2019-no-additionalProperties": {
       message:
-        "If the additionalProperties keyword is used it must be set to false.",
+        "additionalProperties is enabled by default in OAS3.0, and should be disabled.",
       description:
-        "By default JSON Schema allows additional properties, which can potentially lead to mass assignment issues, where unspecified fields are passed to the API without validation. Disable them with `additionalProperties: false` or add `maxProperties`.",
+        "Additional properties are enabled by default in modern OpenAPI and JSON Schema as it helps keep your API forwards compatible, but it can potentially lead to mass assignment issues, where unspecified fields are passed to the API without validation. Disable additional properties explicitly with `additionalProperties: false`.",
       severity: DiagnosticSeverity.Warning,
       formats: [oas3],
-      given: '$..[?(@ && @.type=="object" && @.additionalProperties)]',
+      given: '$..[?(@ && @.type=="object")]',
       then: [
         {
           field: "additionalProperties",
-          function: falsy,
+          function: defined,
         },
       ],
     },
@@ -698,15 +698,29 @@ export default {
     "owasp:api6:2019-constrained-additionalProperties": {
       message: "Objects should not allow unconstrained additionalProperties.",
       description:
-        "By default JSON Schema allows additional properties, which can potentially lead to mass assignment issues, where unspecified fields are passed to the API without validation. Disable them with `additionalProperties: false` or add `maxProperties`",
+        "Additional properties are enabled by default in modern OpenAPI and JSON Schema as it helps keep your API forwards compatible, but it can potentially lead to mass assignment issues, where unspecified fields are passed to the API without validation. Disable additional properties explicitly with `additionalProperties: false`, or constrain the additional properties by providing a schema for their validation: `additionalProperties: { type: ... } }`.",
       severity: DiagnosticSeverity.Warning,
       formats: [oas3],
-      given:
-        '$..[?(@ && @.type=="object" && @.additionalProperties &&  @.additionalProperties!=true &&  @.additionalProperties!=false )]',
+      given: '$..[?(@ && @.type=="object" && @.additionalProperties )]',
       then: [
         {
-          field: "maxProperties",
-          function: defined,
+          function: schema,
+          schema: {
+            oneOf: [
+              // either additionalProperties is disabled
+              {
+                additionalProperties: {
+                  const: false,
+                },
+              },
+              // or it is constrained with a sub-schema
+              {
+                additionalProperties: {
+                  type: "object",
+                },
+              },
+            ],
+          },
         },
       ],
     },
