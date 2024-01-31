@@ -732,13 +732,28 @@ export default {
      * - ❌ Unhardened images
      * - ✅ Missing, outdated, or misconfigured TLS
      * - ❌ Exposed storage or server management panels
-     * - 🟠 Missing CORS policy or security headers
+     * - ✅ Missing CORS policy or security headers
      * https://github.com/stoplightio/spectral-owasp-ruleset/issues/5
      * - 🟠 Error messages with stack traces
      * https://github.com/stoplightio/spectral-owasp-ruleset/issues/12
      * - ❌ Unnecessary features enabled
      *
      */
+
+    /**
+     * @author: Phil Sturgeon (https://github.com/philsturgeon)
+     */
+    "owasp:api8:2023-define-cors-origin": {
+      message: "Header `{{property}}` should be defined on all responses.",
+      description:
+        'Setting up CORS headers will control which websites can make browser-based HTTP requests to your API, using either the wildcard "*" to allow any origin, or "null" to disable any origin. Alternatively you can use "Access-Control-Allow-Origin: https://example.com" to indicate that only requests originating from the specified domain (https://example.com) are allowed to access its resources.\n\nMore about CORS here: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS.',
+      given: "$..headers",
+      then: {
+        field: "Access-Control-Allow-Origin",
+        function: truthy,
+      },
+      severity: DiagnosticSeverity.Error,
+    },
 
     /**
      * @author: Andrzej <https://github.com/jerzyn>
