@@ -15,8 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `owasp:api5:2023-admin-security-unique`.
 - Added `owasp:api7:2023-concerning-url-parameter` to keep an eye out for URLs being passed as parameters and warn about server-side request forgery.
 - Added `owasp:api8:2023-no-server-http` which supports `servers` having a `url` which is a relative path.
-- Added `owasp:api9:2023-inventory-access` to indicate intended audience of every server
-- Added `owasp:api9:2023-inventory-environment` to declare intended environment for every server
+- Added `owasp:api9:2023-inventory-access` to indicate intended audience of every server.
+- Added `owasp:api9:2023-inventory-environment` to declare intended environment for every server.
 
 ### Changed
 
@@ -31,7 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Renamed `owasp:api3:2019-define-error-validation` to `owasp:api8:2023-define-error-validation`.
 - Renamed `owasp:api3:2019-define-error-responses-401` to `owasp:api8:2023-define-error-responses-401`.
 - Renamed `owasp:api3:2019-define-error-responses-500` to `owasp:api8:2023-define-error-responses-500`.
-- Renamed `owasp:api4:2019-rate-limit` to `owasp:api4:2023-rate-limit`.
+- Renamed `owasp:api4:2019-rate-limit` to `owasp:api4:2023-rate-limit` and added support for the singular `RateLimit` header in draft-ietf-httpapi-ratelimit-headers-07.
 - Renamed `owasp:api4:2019-rate-limit-retry-after` to `owasp:api4:2023-rate-limit-retry-after`.
 - Renamed `owasp:api4:2019-rate-limit-responses-429` to `owasp:api4:2023-rate-limit-responses-429`.
 - Renamed `owasp:api4:2019-array-limit` to `owasp:api4:2023-array-limit`.

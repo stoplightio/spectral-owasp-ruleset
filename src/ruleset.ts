@@ -452,6 +452,9 @@ export default {
             type: "object",
             oneOf: [
               {
+                required: ["RateLimit"],
+              },
+              {
                 required: ["RateLimit-Limit", "RateLimit-Reset"],
               },
               {
@@ -733,7 +736,6 @@ export default {
      * - ✅ Missing, outdated, or misconfigured TLS
      * - ❌ Exposed storage or server management panels
      * - ✅ Missing CORS policy or security headers
-     * https://github.com/stoplightio/spectral-owasp-ruleset/issues/5
      * - 🟠 Error messages with stack traces
      * https://github.com/stoplightio/spectral-owasp-ruleset/issues/12
      * - ❌ Unnecessary features enabled
@@ -924,16 +926,9 @@ export default {
      * Use case
      * - ❌ Interacts with other APIs over an unencrypted channel;
      * - ❌ Does not properly validate and sanitize data gathered from other APIs prior to processing it or passing it to downstream components;
-     * - 🟠 Blindly follows redirections;
-     *  https://github.com/stoplightio/spectral-owasp-ruleset/issues/55
+     * - ✅ Blindly follows redirections;
      * - ❌ Does not limit the number of resources available to process third-party services responses;
      * - ❌ Does not implement timeouts for interactions with third-party services;
-     *
-     * How to prevent
-     * - ❌ When evaluating service providers, assess their API security posture.
-     * - ❌ Ensure all API interactions (to upstream dependencies) happen over a secure communication channel (TLS).
-     * - ❌ Always validate and properly sanitize data received from integrated APIs before using it.
-     * - ❌ Maintain an allowlist of well-known locations integrated APIs may redirect yours to: do not blindly follow redirects.
      */
   },
 };

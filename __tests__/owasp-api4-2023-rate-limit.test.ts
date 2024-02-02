@@ -3,7 +3,7 @@ import testRule from "./__helpers__/helper";
 
 testRule("owasp:api4:2023-rate-limit", [
   {
-    name: "valid use of IETF Draft HTTP RateLimit Headers",
+    name: "valid use of IETF Draft HTTP RateLimit-* Headers",
     document: {
       openapi: "3.1.0",
       info: { version: "1.0" },
@@ -20,6 +20,33 @@ testRule("owasp:api4:2023-rate-limit", [
                     },
                   },
                   "RateLimit-Reset": {
+                    schema: {
+                      type: "string",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    errors: [],
+  },
+
+  {
+    name: "valid use of IETF Draft HTTP RateLimit Headers",
+    document: {
+      openapi: "3.1.0",
+      info: { version: "1.0" },
+      paths: {
+        "/": {
+          get: {
+            responses: {
+              "201": {
+                description: "ok",
+                headers: {
+                  RateLimit: {
                     schema: {
                       type: "string",
                     },
