@@ -1,7 +1,7 @@
 import { DiagnosticSeverity } from "@stoplight/types";
 import testRule from "./__helpers__/helper";
 
-testRule("owasp:api3:2019-define-error-validation", [
+testRule("owasp:api8:2023-define-error-validation", [
   {
     name: "valid case: 400",
     document: {

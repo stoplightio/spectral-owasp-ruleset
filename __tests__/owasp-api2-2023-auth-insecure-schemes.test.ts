@@ -1,7 +1,7 @@
 import { DiagnosticSeverity } from "@stoplight/types";
 import testRule from "./__helpers__/helper";
 
-testRule("owasp:api2:2019-no-api-keys-in-url", [
+testRule("owasp:api2:2023-auth-insecure-schemes", [
   {
     name: "valid case",
     document: {
@@ -9,9 +9,9 @@ testRule("owasp:api2:2019-no-api-keys-in-url", [
       info: { version: "1.0" },
       components: {
         securitySchemes: {
-          "API Key in URL": {
-            type: "apiKey",
-            in: "header",
+          "bearer is ok": {
+            type: "http",
+            scheme: "bearer",
           },
         },
       },
@@ -26,13 +26,13 @@ testRule("owasp:api2:2019-no-api-keys-in-url", [
       info: { version: "1.0" },
       components: {
         securitySchemes: {
-          "API Key in Query": {
-            type: "apiKey",
-            in: "query",
+          "bad negotiate": {
+            type: "http",
+            scheme: "negotiate",
           },
-          "API Key in Path": {
-            type: "apiKey",
-            in: "path",
+          "bad oauth": {
+            type: "http",
+            scheme: "oauth",
           },
         },
       },
@@ -40,14 +40,14 @@ testRule("owasp:api2:2019-no-api-keys-in-url", [
     errors: [
       {
         message:
-          'ApiKey passed in URL: "query" must not match the pattern "^(path|query)$".',
-        path: ["components", "securitySchemes", "API Key in Query", "in"],
+          "Authentication scheme is considered outdated or insecure: negotiate.",
+        path: ["components", "securitySchemes", "bad negotiate", "scheme"],
         severity: DiagnosticSeverity.Error,
       },
       {
         message:
-          'ApiKey passed in URL: "path" must not match the pattern "^(path|query)$".',
-        path: ["components", "securitySchemes", "API Key in Path", "in"],
+          "Authentication scheme is considered outdated or insecure: oauth.",
+        path: ["components", "securitySchemes", "bad oauth", "scheme"],
         severity: DiagnosticSeverity.Error,
       },
     ],

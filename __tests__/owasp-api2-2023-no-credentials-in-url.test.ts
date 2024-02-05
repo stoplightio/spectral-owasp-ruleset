@@ -1,7 +1,7 @@
 import { DiagnosticSeverity } from "@stoplight/types";
 import testRule from "./__helpers__/helper";
 
-testRule("owasp:api2:2019-no-credentials-in-url", [
+testRule("owasp:api2:2023-no-credentials-in-url", [
   {
     name: "valid case",
     document: {

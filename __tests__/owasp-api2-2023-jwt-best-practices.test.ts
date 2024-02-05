@@ -1,7 +1,7 @@
 import { DiagnosticSeverity } from "@stoplight/types";
 import testRule from "./__helpers__/helper";
 
-testRule("owasp:api2:2019-jwt-best-practices", [
+testRule("owasp:api2:2023-jwt-best-practices", [
   {
     name: "valid case",
     document: {

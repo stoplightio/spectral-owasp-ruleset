@@ -1,16 +1,16 @@
 import { DiagnosticSeverity } from "@stoplight/types";
 import testRule from "./__helpers__/helper";
 
-testRule("owasp:api4:2019-string-limit", [
+testRule("owasp:api4:2023-string-restricted", [
   {
-    name: "valid case: oas2",
+    name: "valid case: format (oas2)",
     document: {
       swagger: "2.0",
       info: { version: "1.0" },
       definitions: {
         Foo: {
           type: "string",
-          maxLength: 99,
+          format: "email",
         },
       },
     },
@@ -18,7 +18,22 @@ testRule("owasp:api4:2019-string-limit", [
   },
 
   {
-    name: "valid case: oas3.0",
+    name: "valid case: format (oas2)",
+    document: {
+      swagger: "2.0",
+      info: { version: "1.0" },
+      definitions: {
+        Foo: {
+          type: "string",
+          pattern: "/^foo/",
+        },
+      },
+    },
+    errors: [],
+  },
+
+  {
+    name: "valid case: format (oas3)",
     document: {
       openapi: "3.0.0",
       info: { version: "1.0" },
@@ -26,7 +41,7 @@ testRule("owasp:api4:2019-string-limit", [
         schemas: {
           Foo: {
             type: "string",
-            maxLength: 99,
+            format: "email",
           },
         },
       },
@@ -35,7 +50,24 @@ testRule("owasp:api4:2019-string-limit", [
   },
 
   {
-    name: "valid case: oas3.1",
+    name: "valid case: pattern (oas3)",
+    document: {
+      openapi: "3.0.0",
+      info: { version: "1.0" },
+      components: {
+        schemas: {
+          Foo: {
+            type: "string",
+            pattern: "/^foo/",
+          },
+        },
+      },
+    },
+    errors: [],
+  },
+
+  {
+    name: "valid case: format (oas3.1)",
     document: {
       openapi: "3.1.0",
       info: { version: "1.0" },
@@ -43,7 +75,7 @@ testRule("owasp:api4:2019-string-limit", [
         schemas: {
           Foo: {
             type: ["null", "string"],
-            maxLength: 99,
+            format: "email",
           },
         },
       },
@@ -52,7 +84,24 @@ testRule("owasp:api4:2019-string-limit", [
   },
 
   {
-    name: "valid case: oas3.0",
+    name: "valid case: pattern (oas3.1)",
+    document: {
+      openapi: "3.1.0",
+      info: { version: "1.0" },
+      components: {
+        schemas: {
+          Foo: {
+            type: ["null", "string"],
+            pattern: "/^foo/",
+          },
+        },
+      },
+    },
+    errors: [],
+  },
+
+  {
+    name: "valid case: enum (oas3)",
     document: {
       openapi: "3.0.0",
       info: { version: "1.0" },
@@ -69,51 +118,17 @@ testRule("owasp:api4:2019-string-limit", [
   },
 
   {
-    name: "valid case: oas3.1",
+    name: "valid case: format + pattern (oas3.1)",
     document: {
       openapi: "3.1.0",
       info: { version: "1.0" },
       components: {
         schemas: {
-          Foo: {
-            type: "string",
-            const: "constant",
-          },
-        },
-      },
-    },
-    errors: [],
-  },
-
-  {
-    name: "valid case: oas3.1",
-    document: {
-      openapi: "3.1.0",
-      info: { version: "1.0" },
-      components: {
-        schemas: {
-          Foo: {
-            type: "string",
-            const: "constant",
-          },
-        },
-      },
-    },
-    errors: [],
-  },
-
-  {
-    name: "valid case: pattern and maxLength, oas3.1",
-    document: {
-      openapi: "3.1.0",
-      info: { version: "1.0" },
-      components: {
-        schemas: {
-          Foo: {
+          foo: {
             type: "string",
             format: "hex",
             pattern: "^[0-9a-fA-F]+$",
-            maxLength: 16
+            maxLength: 16,
           },
         },
       },
@@ -122,7 +137,24 @@ testRule("owasp:api4:2019-string-limit", [
   },
 
   {
-    name: "invalid case: oas2 missing maxLength",
+    name: "valid case: const (oas3.1)",
+    document: {
+      openapi: "3.1.0",
+      info: { version: "1.0" },
+      components: {
+        schemas: {
+          Foo: {
+            type: "string",
+            const: "CONSTANT",
+          },
+        },
+      },
+    },
+    errors: [],
+  },
+
+  {
+    name: "invalid case: neither format or pattern (oas2)",
     document: {
       swagger: "2.0",
       info: { version: "1.0" },
@@ -135,37 +167,15 @@ testRule("owasp:api4:2019-string-limit", [
     errors: [
       {
         message:
-          "Schema of type string must specify maxLength, enum, or const.",
+          "Schema of type string should specify a format, pattern, enum, or const.",
         path: ["definitions", "Foo"],
-        severity: DiagnosticSeverity.Error,
+        severity: DiagnosticSeverity.Warning,
       },
     ],
   },
 
   {
-    name: "invalid case: oas3.0 missing maxLength",
-    document: {
-      openapi: "3.0.0",
-      info: { version: "1.0" },
-      components: {
-        schemas: {
-          Foo: {
-            type: "string",
-          },
-        },
-      },
-    },
-    errors: [
-      {
-        message:
-          "Schema of type string must specify maxLength, enum, or const.",
-        path: ["components", "schemas", "Foo"],
-        severity: DiagnosticSeverity.Error,
-      },
-    ],
-  },
-  {
-    name: "invalid case: oas3.1 missing maxLength",
+    name: "invalid case: neither format or pattern (oas3)",
     document: {
       openapi: "3.1.0",
       info: { version: "1.0" },
@@ -174,15 +184,25 @@ testRule("owasp:api4:2019-string-limit", [
           Foo: {
             type: ["null", "string"],
           },
+
+          Bar: {
+            type: "string",
+          },
         },
       },
     },
     errors: [
       {
         message:
-          "Schema of type string must specify maxLength, enum, or const.",
+          "Schema of type string should specify a format, pattern, enum, or const.",
         path: ["components", "schemas", "Foo"],
-        severity: DiagnosticSeverity.Error,
+        severity: DiagnosticSeverity.Warning,
+      },
+      {
+        message:
+          "Schema of type string should specify a format, pattern, enum, or const.",
+        path: ["components", "schemas", "Bar"],
+        severity: DiagnosticSeverity.Warning,
       },
     ],
   },

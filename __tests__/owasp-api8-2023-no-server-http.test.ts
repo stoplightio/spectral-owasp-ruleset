@@ -1,7 +1,7 @@
 import { DiagnosticSeverity } from "@stoplight/types";
 import testRule from "./__helpers__/helper";
 
-testRule("owasp:api7:2019-security-hosts-https-oas3", [
+testRule("owasp:api8:2023-no-server-http", [
   {
     name: "valid case",
     document: {
@@ -24,7 +24,7 @@ testRule("owasp:api7:2019-security-hosts-https-oas3", [
     errors: [
       {
         message:
-          "Server URLs MUST begin https://, and no other protocol is permitted.",
+          "Server URLs must not use http://. Use https:// or wss:// instead.",
         path: ["servers", "0", "url"],
         severity: DiagnosticSeverity.Error,
       },
@@ -32,20 +32,13 @@ testRule("owasp:api7:2019-security-hosts-https-oas3", [
   },
 
   {
-    name: "an invalid server using ftp",
+    name: "valid case: using a relative path is permitted, deal with the HTTPS yourself",
     document: {
       openapi: "3.1.0",
       info: { version: "1.0" },
       paths: { "/": {} },
-      servers: [{ url: "ftp://api.example.com/" }],
+      servers: [{ url: "/" }],
     },
-    errors: [
-      {
-        message:
-          "Server URLs MUST begin https://, and no other protocol is permitted.",
-        path: ["servers", "0", "url"],
-        severity: DiagnosticSeverity.Error,
-      },
-    ],
+    errors: [],
   },
 ]);

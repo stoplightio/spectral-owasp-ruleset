@@ -1,17 +1,17 @@
 import { DiagnosticSeverity } from "@stoplight/types";
 import testRule from "./__helpers__/helper";
 
-testRule("owasp:api4:2019-integer-format", [
+testRule("owasp:api3:2023-no-unevaluatedProperties", [
   {
-    name: "valid case: format - int32",
+    name: "valid case: oas3_1",
     document: {
       openapi: "3.1.0",
       info: { version: "1.0" },
       components: {
         schemas: {
           Foo: {
-            type: "integer",
-            format: "int32",
+            type: "object",
+            unevaluatedProperties: false,
           },
         },
       },
@@ -20,15 +20,14 @@ testRule("owasp:api4:2019-integer-format", [
   },
 
   {
-    name: "valid case: format - int64",
+    name: "valid case: no unevaluatedProperties defined (oas3_1)",
     document: {
       openapi: "3.1.0",
       info: { version: "1.0" },
       components: {
         schemas: {
           Foo: {
-            type: "integer",
-            format: "int64",
+            type: "object",
           },
         },
       },
@@ -37,15 +36,15 @@ testRule("owasp:api4:2019-integer-format", [
   },
 
   {
-    name: "valid case: format - whatever",
+    name: "valid case: unevaluatedProperties set to false (oas3_1)",
     document: {
       openapi: "3.1.0",
       info: { version: "1.0" },
       components: {
         schemas: {
           Foo: {
-            type: "integer",
-            format: "whatever",
+            type: "object",
+            unevaluatedProperties: false,
           },
         },
       },
@@ -54,23 +53,25 @@ testRule("owasp:api4:2019-integer-format", [
   },
 
   {
-    name: "invalid case: no format",
+    name: "invalid case: unevaluatedProperties set to true (oas3_1)",
     document: {
       openapi: "3.1.0",
       info: { version: "1.0" },
       components: {
         schemas: {
           Foo: {
-            type: "integer",
+            type: "object",
+            unevaluatedProperties: true,
           },
         },
       },
     },
     errors: [
       {
-        message: "Schema of type integer must specify format (int32 or int64).",
-        path: ["components", "schemas", "Foo"],
-        severity: DiagnosticSeverity.Error,
+        message:
+          "If the unevaluatedProperties keyword is used it must be set to false.",
+        path: ["components", "schemas", "Foo", "unevaluatedProperties"],
+        severity: DiagnosticSeverity.Warning,
       },
     ],
   },

@@ -1,18 +1,32 @@
 import { DiagnosticSeverity } from "@stoplight/types";
 import testRule from "./__helpers__/helper";
 
-testRule("owasp:api4:2019-integer-limit", [
+testRule("owasp:api4:2023-string-limit", [
   {
-    name: "valid case: minimum and maximum",
+    name: "valid case: oas2",
     document: {
-      openapi: "3.1.0",
+      swagger: "2.0",
+      info: { version: "1.0" },
+      definitions: {
+        Foo: {
+          type: "string",
+          maxLength: 99,
+        },
+      },
+    },
+    errors: [],
+  },
+
+  {
+    name: "valid case: oas3.0",
+    document: {
+      openapi: "3.0.0",
       info: { version: "1.0" },
       components: {
         schemas: {
           Foo: {
-            type: "integer",
-            minimum: 1,
-            maximum: 99,
+            type: "string",
+            maxLength: 99,
           },
         },
       },
@@ -21,16 +35,15 @@ testRule("owasp:api4:2019-integer-limit", [
   },
 
   {
-    name: "valid case: exclusiveMinimum and exclusiveMaximum",
+    name: "valid case: oas3.1",
     document: {
       openapi: "3.1.0",
       info: { version: "1.0" },
       components: {
         schemas: {
           Foo: {
-            type: "integer",
-            exclusiveMinimum: 1,
-            exclusiveMaximum: 99,
+            type: ["null", "string"],
+            maxLength: 99,
           },
         },
       },
@@ -39,16 +52,15 @@ testRule("owasp:api4:2019-integer-limit", [
   },
 
   {
-    name: "valid case: minimum and exclusiveMaximum",
+    name: "valid case: oas3.0",
     document: {
-      openapi: "3.1.0",
+      openapi: "3.0.0",
       info: { version: "1.0" },
       components: {
         schemas: {
           Foo: {
-            type: "integer",
-            minimum: 1,
-            exclusiveMaximum: 99,
+            type: "string",
+            enum: ["a", "b", "c"],
           },
         },
       },
@@ -57,16 +69,15 @@ testRule("owasp:api4:2019-integer-limit", [
   },
 
   {
-    name: "valid case: exclusiveMinimum and maximum",
+    name: "valid case: oas3.1",
     document: {
       openapi: "3.1.0",
       info: { version: "1.0" },
       components: {
         schemas: {
           Foo: {
-            type: "integer",
-            exclusiveMinimum: 1,
-            maximum: 99,
+            type: "string",
+            const: "constant",
           },
         },
       },
@@ -75,139 +86,123 @@ testRule("owasp:api4:2019-integer-limit", [
   },
 
   {
-    name: "invalid case: only maximum",
+    name: "valid case: oas3.1",
     document: {
       openapi: "3.1.0",
       info: { version: "1.0" },
       components: {
         schemas: {
           Foo: {
-            type: "integer",
-            maximum: 99,
+            type: "string",
+            const: "constant",
           },
+        },
+      },
+    },
+    errors: [],
+  },
+
+  {
+    name: "valid case: pattern and maxLength, oas3.1",
+    document: {
+      openapi: "3.1.0",
+      info: { version: "1.0" },
+      components: {
+        schemas: {
+          Foo: {
+            type: "string",
+            format: "hex",
+            pattern: "^[0-9a-fA-F]+$",
+            maxLength: 16,
+          },
+        },
+      },
+    },
+    errors: [],
+  },
+
+  {
+    name: "invalid case: oas2 missing maxLength",
+    document: {
+      swagger: "2.0",
+      info: { version: "1.0" },
+      definitions: {
+        Foo: {
+          type: "string",
         },
       },
     },
     errors: [
       {
-        message: "Schema of type integer must specify minimum and maximum.",
-        path: ["components", "schemas", "Foo"],
+        message:
+          "Schema of type string must specify maxLength, enum, or const.",
+        path: ["definitions", "Foo"],
         severity: DiagnosticSeverity.Error,
       },
     ],
   },
 
   {
-    name: "invalid case: only exclusiveMaximum",
+    name: "invalid case: oas3.0 missing maxLength",
     document: {
-      openapi: "3.1.0",
+      openapi: "3.0.0",
       info: { version: "1.0" },
       components: {
         schemas: {
           Foo: {
-            type: "integer",
-            exclusiveMaximum: 99,
+            type: "string",
           },
         },
       },
     },
     errors: [
       {
-        message: "Schema of type integer must specify minimum and maximum.",
+        message:
+          "Schema of type string must specify maxLength, enum, or const.",
         path: ["components", "schemas", "Foo"],
         severity: DiagnosticSeverity.Error,
       },
     ],
   },
-
   {
-    name: "invalid case: only maximum",
+    name: "invalid case: oas3.1 missing maxLength",
     document: {
       openapi: "3.1.0",
       info: { version: "1.0" },
       components: {
         schemas: {
           Foo: {
-            type: "integer",
-            maximum: 99,
+            type: ["null", "string"],
           },
         },
       },
     },
     errors: [
       {
-        message: "Schema of type integer must specify minimum and maximum.",
+        message:
+          "Schema of type string must specify maxLength, enum, or const.",
         path: ["components", "schemas", "Foo"],
         severity: DiagnosticSeverity.Error,
       },
     ],
   },
-
   {
-    name: "invalid case: only exclusiveMinimum",
+    name: "valid case: format: date-time does not need maxLength",
     document: {
       openapi: "3.1.0",
       info: { version: "1.0" },
       components: {
         schemas: {
           Foo: {
-            type: "integer",
-            exclusiveMinimum: 1,
+            type: ["null", "string"],
           },
         },
       },
     },
     errors: [
       {
-        message: "Schema of type integer must specify minimum and maximum.",
-        path: ["components", "schemas", "Foo"],
-        severity: DiagnosticSeverity.Error,
-      },
-    ],
-  },
-
-  {
-    name: "invalid case: only minimum",
-    document: {
-      openapi: "3.1.0",
-      info: { version: "1.0" },
-      components: {
-        schemas: {
-          Foo: {
-            type: "integer",
-            minimum: 1,
-          },
-        },
-      },
-    },
-    errors: [
-      {
-        message: "Schema of type integer must specify minimum and maximum.",
-        path: ["components", "schemas", "Foo"],
-        severity: DiagnosticSeverity.Error,
-      },
-    ],
-  },
-
-  {
-    name: "invalid case: both minimums and an exclusiveMaximum",
-    document: {
-      openapi: "3.1.0",
-      info: { version: "1.0" },
-      components: {
-        schemas: {
-          Foo: {
-            type: "integer",
-            minimum: 1,
-            exclusiveMinimum: 1,
-            exclusiveMaximum: 4,
-          },
-        },
-      },
-    },
-    errors: [
-      {
-        message: "Schema of type integer must specify minimum and maximum.",
+        message:
+          "Schema of type string must specify maxLength, enum, or const.",
         path: ["components", "schemas", "Foo"],
         severity: DiagnosticSeverity.Error,
       },

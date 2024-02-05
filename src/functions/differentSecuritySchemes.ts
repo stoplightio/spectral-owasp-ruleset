@@ -41,54 +41,64 @@ export default createRulesetFunction(
       type: "object",
       additionalProperties: false,
       properties: {
-        schemesPath: {
-          type: "array",
-        },
-        nullable: true,
-        methods: {
-          type: "array",
+        adminUrl: {
+          type: "string",
         },
       },
       required: [],
     },
   },
-  function checkSecurity(input: any, options: any): IFunctionResult[] {
+  function differentSecuritySchemes(
+    input: any,
+    options: any
+  ): IFunctionResult[] {
     const errorList = [];
-    const { schemesPath: s, nullable, methods } = options;
-    const { paths, security } = input;
+    const nonAdminSecurityHashes = [];
+    const adminSecurityEntries = [];
+
+    const { adminUrl = "/admin" } = options;
+    const { paths } = input;
 
     for (const { path, operation: httpMethod } of getAllOperations(paths)) {
-      // Skip methods not configured in `methods`.
-      if (methods && Array.isArray(methods) && !methods.includes(httpMethod)) {
-        continue;
-      }
       let { security: operationSecurity } = paths[path][httpMethod];
-      let securityRef = [path, httpMethod];
+
+      // No security so skip this and leave it for other rules which check for security.
       if (operationSecurity === undefined) {
-        operationSecurity = security;
-        securityRef = ["$.security"];
-      }
-      if (!operationSecurity || operationSecurity.length === 0) {
-        errorList.push({
-          message: `Operation has undefined security scheme in ${securityRef}.`,
-          path: ["paths", path, httpMethod, "security", s],
-        });
+        continue;
       }
       if (Array.isArray(operationSecurity)) {
         for (const [idx, securityEntry] of operationSecurity.entries()) {
           if (typeof securityEntry !== "object") {
             continue;
           }
-          const securitySchemeIds = Object.keys(securityEntry);
-          securitySchemeIds.length === 0 &&
-            nullable === false &&
-            errorList.push({
-              message: `Operation referencing empty security scheme in ${securityRef}.`,
+
+          // This creates a string for easier comparison to see if its used elsewhere, but
+          // this might not be tough enough for some of the weirder edge cases.
+          const securityHash = JSON.stringify(securityEntry);
+
+          if (path.includes(adminUrl)) {
+            adminSecurityEntries.push({
+              uri: path,
+              hash: securityHash,
               path: ["paths", path, httpMethod, "security", idx],
             });
+          } else {
+            nonAdminSecurityHashes.push(securityHash);
+          }
         }
       }
     }
+
+    // For every admin security entry, check if it is used in a non-admin path.
+    for (const { uri, hash, path } of adminSecurityEntries) {
+      if (nonAdminSecurityHashes.includes(hash)) {
+        errorList.push({
+          message: `Admin endpoint ${uri} has the same security requirement as a non-admin endpoint.`,
+          path,
+        });
+      }
+    }
+
     return errorList;
   }
 );

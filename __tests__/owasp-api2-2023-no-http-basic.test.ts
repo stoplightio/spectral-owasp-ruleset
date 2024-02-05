@@ -1,7 +1,7 @@
 import { DiagnosticSeverity } from "@stoplight/types";
 import testRule from "./__helpers__/helper";
 
-testRule("owasp:api2:2019-no-http-basic", [
+testRule("owasp:api2:2023-no-http-basic", [
   {
     name: "valid case",
     document: {
@@ -36,7 +36,7 @@ testRule("owasp:api2:2019-no-http-basic", [
     errors: [
       {
         message:
-          "Security scheme uses HTTP Basic. Use a more secure authentication method, like OAuth 2.0.",
+          "Security scheme uses HTTP Basic. Use a more secure authentication method, like OAuth 2, or OpenID.",
         path: ["components", "securitySchemes", "please-hack-me", "scheme"],
         severity: DiagnosticSeverity.Error,
       },

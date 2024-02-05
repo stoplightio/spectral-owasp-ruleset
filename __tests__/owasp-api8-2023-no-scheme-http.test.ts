@@ -1,15 +1,27 @@
 import { DiagnosticSeverity } from "@stoplight/types";
 import testRule from "./__helpers__/helper";
 
-testRule("owasp:api7:2019-security-hosts-https-oas2", [
+testRule("owasp:api8:2023-no-scheme-http", [
   {
-    name: "valid case",
+    name: "valid case: https",
     document: {
       swagger: "2.0",
       info: { version: "1.0" },
       paths: { "/": {} },
       host: "example.com",
       schemes: ["https"],
+    },
+    errors: [],
+  },
+
+  {
+    name: "valid case: wss",
+    document: {
+      swagger: "2.0",
+      info: { version: "1.0" },
+      paths: { "/": {} },
+      host: "example.com",
+      schemes: ["wss"],
     },
     errors: [],
   },
@@ -25,8 +37,7 @@ testRule("owasp:api7:2019-security-hosts-https-oas2", [
     },
     errors: [
       {
-        message:
-          "All servers defined MUST use https, and no other protocol is permitted.",
+        message: "Server schemes must not use http. Use https or wss instead.",
         path: ["schemes", "0"],
         severity: DiagnosticSeverity.Error,
       },
@@ -44,8 +55,7 @@ testRule("owasp:api7:2019-security-hosts-https-oas2", [
     },
     errors: [
       {
-        message:
-          "All servers defined MUST use https, and no other protocol is permitted.",
+        message: "Server schemes must not use http. Use https or wss instead.",
         path: ["schemes", "1"],
         severity: DiagnosticSeverity.Error,
       },
@@ -63,8 +73,7 @@ testRule("owasp:api7:2019-security-hosts-https-oas2", [
     },
     errors: [
       {
-        message:
-          "All servers defined MUST use https, and no other protocol is permitted.",
+        message: "Server schemes must not use http. Use https or wss instead.",
         path: ["schemes", "0"],
         severity: DiagnosticSeverity.Error,
       },
