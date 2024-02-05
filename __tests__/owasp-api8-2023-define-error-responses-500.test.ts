@@ -1,7 +1,7 @@
 import { DiagnosticSeverity } from "@stoplight/types";
 import testRule from "./__helpers__/helper";
 
-testRule("owasp:api3:2019-define-error-responses-500", [
+testRule("owasp:api8:2023-define-error-responses-500", [
   {
     name: "valid: defines a 500 response with content",
     document: {

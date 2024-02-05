@@ -4,10 +4,12 @@
 
 Scan an [OpenAPI](https://spec.openapis.org/oas/v3.1.0) document to detect security issues. As OpenAPI is only describing the surface level of the API it cannot see what is happening in your code, but it can spot obvious issues and outdated standards being used.
 
+v2.x of this ruleset is based on the [OWASP API Security Top 10 2023 edition](https://owasp.org/API-Security/editions/2023/en/0x00-header/), but if you would like to use the [2019 edition](https://owasp.org/API-Security/editions/2019/en/0x00-header/) please use v1.x.
+
 ## Installation
 
 ```bash
-npm install --save -D @stoplight/spectral-owasp-ruleset
+npm install --save -D @stoplight/spectral-owasp-ruleset@^2.0
 npm install --save -D @stoplight/spectral-cli
 ```
 
@@ -39,16 +41,12 @@ You should see some output like this:
 
 ```
 /Users/phil/src/protect-earth-api/api/openapi.yaml
-  44:17      warning  owasp:api3:2019-define-error-responses-400:400 response should be defined.. Missing responses[400]  paths./upload.post.responses
-  44:17      warning  owasp:api3:2019-define-error-responses-429:429 response should be defined.. Missing responses[429]  paths./upload.post.responses
-  44:17      warning  owasp:api3:2019-define-error-responses-500:500 response should be defined.. Missing responses[500]  paths./upload.post.responses
-  45:15        error  owasp:api4:2019-rate-limit                  All 2XX and 4XX responses should define rate limiting headers.  paths./upload.post.responses[201]
-  47:15        error  owasp:api4:2019-rate-limit                  All 2XX and 4XX responses should define rate limiting headers.  paths./upload.post.responses[401]
-  53:15        error  owasp:api4:2019-rate-limit                  All 2XX and 4XX responses should define rate limiting headers.  paths./upload.post.responses[403]
-  59:15        error  owasp:api4:2019-rate-limit                  All 2XX and 4XX responses should define rate limiting headers.  paths./upload.post.responses[409]
-  65:15        error  owasp:api4:2019-rate-limit                  All 2XX and 4XX responses should define rate limiting headers.  paths./upload.post.responses[422]
- 193:16  information  owasp:api2:2019-protection-global-safe      This operation is not protected by any security scheme.  paths./sites.get.security
- 210:16  information  owasp:api2:2019-protection-global-safe      This operation is not protected by any security scheme.  paths./species.get.security
+  4:5        error    owasp:api8:2023-inventory-access            Declare intended audience of every server by defining servers[0].x-internal as true/false.  servers[0]
+  4:10       error    owasp:api8:2023-no-server-http              Server URLs must not use http://. https:// is highly recommended.                        servers[0].url
+  45:15        error  owasp:api4:2023-rate-limit                  All 2XX and 4XX responses should define rate limiting headers.  paths./upload.post.responses[201]
+  47:15        error  owasp:api4:2023-rate-limit                  All 2XX and 4XX responses should define rate limiting headers.  paths./upload.post.responses[401]
+  93:16  information  owasp:api2:2023-read-restricted             This operation is not protected by any security scheme.  paths./sites.get.security
+ 210:16  information  owasp:api2:2023-read-restricted             This operation is not protected by any security scheme.  paths./species.get.security
 ```
 
 Now you have some things to work on for your API. Thankfully these are only at the `warning` and `information` severity, and that is not going to [fail continuous integration](https://meta.stoplight.io/docs/spectral/ZG9jOjExNTMyOTAx-continuous-integration) (unless [you want them to](https://meta.stoplight.io/docs/spectral/ZG9jOjI1MTg1-spectral-cli#error-results)).

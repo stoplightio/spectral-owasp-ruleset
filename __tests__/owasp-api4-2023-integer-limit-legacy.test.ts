@@ -1,7 +1,7 @@
 import { DiagnosticSeverity } from "@stoplight/types";
 import testRule from "./__helpers__/helper";
 
-testRule("owasp:api4:2019-integer-limit-legacy", [
+testRule("owasp:api4:2023-integer-limit-legacy", [
   {
     name: "valid case: oas2",
     document: {

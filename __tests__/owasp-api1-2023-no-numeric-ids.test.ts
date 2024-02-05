@@ -1,9 +1,9 @@
 import { DiagnosticSeverity } from "@stoplight/types";
 import testRule from "./__helpers__/helper";
 
-testRule("owasp:api1:2019-no-numeric-ids", [
+testRule("owasp:api1:2023-no-numeric-ids", [
   {
-    name: "valid case",
+    name: "valid case: uuid",
     document: {
       openapi: "3.1.0",
       info: { version: "1.0" },
@@ -19,6 +19,60 @@ testRule("owasp:api1:2019-no-numeric-ids", [
                 schema: {
                   type: "string",
                   format: "uuid",
+                },
+              },
+            ],
+          },
+        },
+      },
+    },
+    errors: [],
+  },
+
+  {
+    name: "valid case: ulid",
+    document: {
+      openapi: "3.1.0",
+      info: { version: "1.0" },
+      paths: {
+        "/foo/{id}": {
+          get: {
+            description: "get",
+            parameters: [
+              {
+                name: "id",
+                in: "path",
+                required: true,
+                schema: {
+                  type: "string",
+                  format: "ulid",
+                },
+              },
+            ],
+          },
+        },
+      },
+    },
+    errors: [],
+  },
+
+  {
+    name: "valid case: random",
+    document: {
+      openapi: "3.1.0",
+      info: { version: "1.0" },
+      paths: {
+        "/foo/{id}": {
+          get: {
+            description: "get",
+            parameters: [
+              {
+                name: "id",
+                in: "path",
+                required: true,
+                schema: {
+                  type: "string",
+                  example: "sfdjkhjk24kd9s",
                 },
               },
             ],
@@ -88,25 +142,25 @@ testRule("owasp:api1:2019-no-numeric-ids", [
     errors: [
       {
         message:
-          "OWASP API1:2019 - Use random IDs that cannot be guessed. UUIDs are preferred.",
+          "Use random IDs that cannot be guessed. UUIDs are preferred but any other random string will do.",
         path: ["paths", "/foo/{id}", "get", "parameters", "0", "schema"],
         severity: DiagnosticSeverity.Error,
       },
       {
         message:
-          "OWASP API1:2019 - Use random IDs that cannot be guessed. UUIDs are preferred.",
+          "Use random IDs that cannot be guessed. UUIDs are preferred but any other random string will do.",
         path: ["paths", "/foo/{id}", "get", "parameters", "2", "schema"],
         severity: DiagnosticSeverity.Error,
       },
       {
         message:
-          "OWASP API1:2019 - Use random IDs that cannot be guessed. UUIDs are preferred.",
+          "Use random IDs that cannot be guessed. UUIDs are preferred but any other random string will do.",
         path: ["paths", "/foo/{id}", "get", "parameters", "3", "schema"],
         severity: DiagnosticSeverity.Error,
       },
       {
         message:
-          "OWASP API1:2019 - Use random IDs that cannot be guessed. UUIDs are preferred.",
+          "Use random IDs that cannot be guessed. UUIDs are preferred but any other random string will do.",
         path: ["paths", "/foo/{id}", "get", "parameters", "4", "schema"],
         severity: DiagnosticSeverity.Error,
       },

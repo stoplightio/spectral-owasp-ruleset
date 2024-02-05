@@ -1,7 +1,7 @@
 import { DiagnosticSeverity } from "@stoplight/types";
 import testRule from "./__helpers__/helper";
 
-testRule("owasp:api6:2019-no-additionalProperties", [
+testRule("owasp:api3:2023-no-additionalProperties", [
   {
     name: "valid case: oas2 does not allow additionalProperties by default so dont worry about it",
     document: {
@@ -10,7 +10,6 @@ testRule("owasp:api6:2019-no-additionalProperties", [
       definitions: {
         Foo: {
           type: "object",
-          additionalProperties: false,
         },
       },
     },

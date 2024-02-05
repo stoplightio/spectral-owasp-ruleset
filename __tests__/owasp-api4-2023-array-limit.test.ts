@@ -1,7 +1,7 @@
 import { DiagnosticSeverity } from "@stoplight/types";
 import testRule from "./__helpers__/helper";
 
-testRule("owasp:api4:2019-array-limit", [
+testRule("owasp:api4:2023-array-limit", [
   {
     name: "valid case: oas2",
     document: {
@@ -27,13 +27,12 @@ testRule("owasp:api4:2019-array-limit", [
           Foo: {
             type: "array",
             maxItems: 99,
-          }
+          },
         },
       },
     },
     errors: [],
   },
-
 
   {
     name: "valid case: oas3.1",
@@ -47,13 +46,13 @@ testRule("owasp:api4:2019-array-limit", [
             maxLength: 99,
           },
           User: {
-            type: 'object',
+            type: "object",
             properties: {
               type: {
-                enum: ['user', 'admin'],
+                enum: ["user", "admin"],
               },
-            }
-          }
+            },
+          },
         },
       },
     },

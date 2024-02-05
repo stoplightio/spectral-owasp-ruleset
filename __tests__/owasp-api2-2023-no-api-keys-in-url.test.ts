@@ -1,7 +1,7 @@
 import { DiagnosticSeverity } from "@stoplight/types";
 import testRule from "./__helpers__/helper";
 
-testRule("owasp:api2:2019-auth-insecure-schemes", [
+testRule("owasp:api2:2023-no-api-keys-in-url", [
   {
     name: "valid case",
     document: {
@@ -9,9 +9,9 @@ testRule("owasp:api2:2019-auth-insecure-schemes", [
       info: { version: "1.0" },
       components: {
         securitySchemes: {
-          "bearer is ok": {
-            type: "http",
-            scheme: "bearer",
+          "API Key in URL": {
+            type: "apiKey",
+            in: "header",
           },
         },
       },
@@ -26,13 +26,13 @@ testRule("owasp:api2:2019-auth-insecure-schemes", [
       info: { version: "1.0" },
       components: {
         securitySchemes: {
-          "bad negotiate": {
-            type: "http",
-            scheme: "negotiate",
+          "API Key in Query": {
+            type: "apiKey",
+            in: "query",
           },
-          "bad oauth": {
-            type: "http",
-            scheme: "oauth",
+          "API Key in Path": {
+            type: "apiKey",
+            in: "path",
           },
         },
       },
@@ -40,14 +40,14 @@ testRule("owasp:api2:2019-auth-insecure-schemes", [
     errors: [
       {
         message:
-          "Authentication scheme is considered outdated or insecure: negotiate.",
-        path: ["components", "securitySchemes", "bad negotiate", "scheme"],
+          'API Key passed in URL: "query" must not match the pattern "^(path|query)$".',
+        path: ["components", "securitySchemes", "API Key in Query", "in"],
         severity: DiagnosticSeverity.Error,
       },
       {
         message:
-          "Authentication scheme is considered outdated or insecure: oauth.",
-        path: ["components", "securitySchemes", "bad oauth", "scheme"],
+          'API Key passed in URL: "path" must not match the pattern "^(path|query)$".',
+        path: ["components", "securitySchemes", "API Key in Path", "in"],
         severity: DiagnosticSeverity.Error,
       },
     ],

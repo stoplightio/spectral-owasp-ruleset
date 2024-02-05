@@ -1,7 +1,7 @@
 import { DiagnosticSeverity } from "@stoplight/types";
 import testRule from "./__helpers__/helper";
 
-testRule("owasp:api4:2019-rate-limit", [
+testRule("owasp:api4:2023-rate-limit", [
   {
     name: "valid use of IETF Draft HTTP RateLimit Headers",
     document: {

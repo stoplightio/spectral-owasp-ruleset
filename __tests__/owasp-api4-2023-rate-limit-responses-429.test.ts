@@ -1,7 +1,7 @@
 import { DiagnosticSeverity } from "@stoplight/types";
 import testRule from "./__helpers__/helper";
 
-testRule("owasp:api4:2019-rate-limit-responses-429", [
+testRule("owasp:api4:2023-rate-limit-responses-429", [
   {
     name: "valid: defines a 429 response with content",
     document: {
