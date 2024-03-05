@@ -51,7 +51,7 @@ You should see some output like this:
 
 Now you have some things to work on for your API. Thankfully these are only at the `warning` and `information` severity, and that is not going to [fail continuous integration](https://docs.stoplight.io/docs/spectral/ZG9jOjExNTMyOTAx-continuous-integration) (unless [you want them to](https://docs.stoplight.io/docs/spectral/ZG9jOjI1MTg1-spectral-cli#error-results)).
 
-There are [a bunch of other rulesets](https://github.com/stoplightio/spectral-rulesets) you can use, or use for inspiration for your own rulesets and API Style Guides.
+There are [a bunch of other rulesets](https://github.com/stoplightio/spectral-rulesets) or [Stoplight API Stylebook](http://apistylebook.stoplight.io) you can use, or use for inspiration for your own rulesets and API Style Guides.
 
 ## 🎉 Thanks
 
