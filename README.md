@@ -6,6 +6,7 @@ Scan an [OpenAPI](https://spec.openapis.org/oas/v3.1.0) document to detect secur
 
 v2.x of this ruleset is based on the [OWASP API Security Top 10 2023 edition](https://owasp.org/API-Security/editions/2023/en/0x00-header/), but if you would like to use the [2019 edition](https://owasp.org/API-Security/editions/2019/en/0x00-header/) please use v1.x.
 
+
 ## Installation
 
 ```bash
