@@ -721,7 +721,7 @@ export default {
         ],
       then: {
         function: pattern,
-          functionOptions: {
+        functionOptions: {
           notMatch: /(^(callback|redirect)|(_url|Url|-url))$/,
         }
       },
