@@ -1,6 +1,5 @@
 import {
   defined,
-  undefined,
   truthy,
   pattern,
   schema,
@@ -716,10 +715,15 @@ export default {
       description:
         "Using external resource based on user input for webhooks, file fetching from URLs, custom SSO, URL previews, or redirects, can lead to a wide variety of security issues.\n\nLearn more about Server Side Request Forgery here: https://owasp.org/API-Security/editions/2023/en/0xa7-server-side-request-forgery/",
       severity: DiagnosticSeverity.Information,
-      given:
-        '$.paths..parameters[*][?(@property === "name" && (@ === "callback" || @ === "redirect" || @.match(/(_url|Url|-url)$/)))]^',
+      given: [
+          '$.paths[*].parameters[*].name',
+          '$.paths[*][get,put,post,delete,options,head,patch,trace].parameters[*].name',
+        ],
       then: {
-        function: undefined,
+        function: pattern,
+        functionOptions: {
+          notMatch: /(^(callback|redirect)|(_url|Url|-url))$/,
+        }
       },
     },
 
