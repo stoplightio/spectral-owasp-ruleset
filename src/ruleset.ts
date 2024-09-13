@@ -269,7 +269,7 @@ export default {
       description:
         "Using short-lived access tokens is a good practice, and when using OAuth 2 this is done by using refresh tokens. If a malicious actor is able to get hold of an access token then rotation means that token might not work by the time they try to use it, or it could at least reduce how long they are able to perform malicious requests.",
       severity: DiagnosticSeverity.Error,
-      given: ['$.components.securitySchemes[?(@ && @.type=="oauth2")].flows.*'],
+      given: '$.components.securitySchemes[?(@ && @.type=="oauth2")].flows[?(@property != "clientCredentials")]',
       then: [
         {
           field: "refreshUrl",
