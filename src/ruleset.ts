@@ -661,7 +661,7 @@ export default {
 
     "owasp:api5:2023-admin-security-unique": {
       message: "{{error}}",
-      description: "",
+      description: "Ensure that administrative endpoints do not use the same security scheme as non-admin endpoints.",
       severity: DiagnosticSeverity.Error,
       given: "$",
       then: [
