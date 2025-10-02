@@ -27,7 +27,49 @@ testRule("owasp:api2:2023-no-credentials-in-url", [
     },
     errors: [],
   },
-
+  {
+    name: "valid case - undefined @in.match",
+    document:{
+      "openapi": "3.1.0",
+      "servers": [],
+      "paths": {},
+      "components": {
+        "schemas": {
+          "testSchema": {
+            "paths": {
+              "type": "object",
+              "properties": {
+                "parameters": {
+                  "type": "array",
+                  "description": "",
+                  "items": {
+                    "type": "object",
+                    "description": "",
+                    "properties": {
+                      "in": {
+                        "type": "string",
+                        "description": ""
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "info": {
+        "title": "",
+        "version": ""
+      },
+      "webhooks": {}
+    },
+    errors: [],
+  },
   {
     name: "invalid case",
     document: {

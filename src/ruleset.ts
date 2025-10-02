@@ -196,7 +196,7 @@ export default {
         "URL parameters MUST NOT contain credentials such as API key, password, or secret. See [RAC_GEN_004](https://docs.italia.it/italia/piano-triennale-ict/lg-modellointeroperabilita-docs/it/bozza/doc/04_Raccomandazioni%20di%20implementazione/04_raccomandazioni-tecniche-generali/01_globali.html?highlight=credenziali#rac-gen-004-non-passare-credenziali-o-dati-riservati-nellurl)",
       severity: DiagnosticSeverity.Error,
       formats: [oas3],
-      given: ["$..parameters[?(@ && @.in && @.in.match(/query|path/))].name"],
+      given: ["$..parameters[?(@ && @.in && @.in.match && @.in.match(/query|path/))].name"],
       then: [
         {
           field: "name",
