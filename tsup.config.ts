@@ -1,5 +1,6 @@
-import type { Options } from 'tsup';
-export default <Options>{
+import { defineConfig } from 'tsup'
+
+export default defineConfig({
   entry: ["src/ruleset.ts"],
   clean: true,
   dts: true,
@@ -17,4 +18,4 @@ export default <Options>{
 
     return {};
   },
-};
+});

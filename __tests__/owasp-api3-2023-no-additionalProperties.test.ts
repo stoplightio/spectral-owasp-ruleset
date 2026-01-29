@@ -78,7 +78,7 @@ testRule("owasp:api3:2023-no-additionalProperties", [
         },
       },
     },
-    errors: [{}],
+    errors: [],
   },
 
   {
