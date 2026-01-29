@@ -3,10 +3,12 @@ module.exports = async () => {
     preset: "ts-jest",
     testPathIgnorePatterns: ["__helpers__"],
     testEnvironment: "node",
-    globals: {
-      "ts-jest": {
-        useIsolatedModules: true,
-      },
-    },
-  };
+    transform: {
+      "\\.[jt]sx?$": [
+        'ts-jest',
+        {
+          tsconfig: 'tsconfig.test.json',
+        },
+    ],
+  }};
 };
